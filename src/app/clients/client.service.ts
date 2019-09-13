@@ -1,21 +1,32 @@
 import { Injectable } from '@angular/core';
-import { CLIENTS } from './clients.json';
 import { Client } from './client.js';
 import { Subject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClientService {
 
-  public clientsUpdated: Subject<Client[]> = new Subject<Client[]>();
+  private endpoint = 'http://localhost:8080/api/clients';
 
-  constructor() {
+  public clients: Client[] = [];
+
+  public clientsUpdated: Subject<void> = new Subject<void>();
+
+  constructor(private http: HttpClient) {
 
   }
 
+  seed(): void {
+    this.http.get<Client[]>(this.endpoint).subscribe(clients => {
+      this.clients = clients;
+      this.clientsUpdated.next();
+    });
+  }
+
   getClients(): Client[] {
-    return CLIENTS;
+    return this.clients.slice();
   }
 
 }
