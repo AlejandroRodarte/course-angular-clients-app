@@ -14,7 +14,7 @@ const routes: Routes = [
     component: ClientsComponent
   },
   {
-    path: 'clients/add',
+    path: 'clients/form',
     component: ClientFormComponent
   }
 ];
