@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Client } from './../client';
 import { ClientService } from '../client.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 
 import swal from 'sweetalert2';
 
@@ -13,15 +13,33 @@ import swal from 'sweetalert2';
 })
 export class ClientFormComponent implements OnInit {
 
-  private client: Client;
+  public client: Client = new Client();
   public title = 'Create Client';
 
   constructor(
     private clientService: ClientService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
+    this.loadClient();
+  }
+
+  loadClient(): void {
+
+    this.route.params.subscribe((params: Params) => {
+
+      const id = params.id;
+
+      if (id) {
+        this.clientService.getClient(id).subscribe(client => {
+          this.client = client;
+        });
+      }
+
+    });
+
   }
 
   onSubmit(clientForm: NgForm) {

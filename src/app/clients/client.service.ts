@@ -33,6 +33,10 @@ export class ClientService {
     return this.clients.slice();
   }
 
+  getClient(id: number): Observable<Client> {
+    return this.http.get<Client>(`${this.endpoint}/${id}`);
+  }
+
   createClient(client: Client): Observable<Client> {
     return this.http.post<Client>(this.endpoint, client, { headers: this.httpHeaders });
   }

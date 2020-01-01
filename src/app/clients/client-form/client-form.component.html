@@ -20,7 +20,7 @@
                   name="firstName"
                   id="firstName"
                   class="form-control"
-                  ngModel
+                  [ngModel]="client.firstName"
                   required>
 
         </div>
@@ -39,7 +39,7 @@
                   name="lastName"
                   id="lastName"
                   class="form-control"
-                  ngModel
+                  [ngModel]="client.lastName"
                   required>
 
         </div>
@@ -58,7 +58,7 @@
                   name="email"
                   id="email"
                   class="form-control"
-                  ngModel
+                  [ngModel]="client.email"
                   required
                   email>
 
