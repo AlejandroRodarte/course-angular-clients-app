@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Client } from './../client';
+import { ClientService } from '../client.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-client-form',
@@ -12,13 +14,22 @@ export class ClientFormComponent implements OnInit {
   private client: Client;
   public title = 'Create Client';
 
-  constructor() { }
+  constructor(
+    private clientService: ClientService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
   }
 
   onSubmit(clientForm: NgForm) {
+
     this.client = clientForm.value;
+
+    this.clientService.createClient(this.client).subscribe(client => {
+      this.router.navigate(['/clients']);
+    });
+
   }
 
 }
