@@ -16,6 +16,8 @@ export class ClientFormComponent implements OnInit {
   public client: Client = new Client();
   public title = 'Create Client';
 
+  public editMode = false;
+
   constructor(
     private clientService: ClientService,
     private router: Router,
@@ -33,9 +35,15 @@ export class ClientFormComponent implements OnInit {
       const id = params.id;
 
       if (id) {
+
+        this.editMode = true;
+
         this.clientService.getClient(id).subscribe(client => {
           this.client = client;
         });
+
+      } else {
+        this.editMode = false;
       }
 
     });
@@ -44,12 +52,21 @@ export class ClientFormComponent implements OnInit {
 
   onSubmit(clientForm: NgForm) {
 
-    this.client = clientForm.value;
+    this.client.firstName = clientForm.value.firstName;
+    this.client.lastName = clientForm.value.lastName;
+    this.client.email = clientForm.value.email;
 
-    this.clientService.createClient(this.client).subscribe(client => {
-      this.router.navigate(['/clients']);
-      swal.fire('New Client', `The client ${client.firstName} has been successfully saved.`, 'success');
-    });
+    if (!this.editMode) {
+      this.clientService.createClient(this.client).subscribe(client => {
+        this.router.navigate(['/clients']);
+        swal.fire('New Client', `The client ${client.firstName} has been successfully saved.`, 'success');
+      });
+    } else {
+      this.clientService.updateClient(this.client).subscribe(client => {
+        this.router.navigate(['/clients']);
+        swal.fire('New Client', `The client ${client.firstName} has been successfully updated.`, 'success');
+      });
+    }
 
   }
 

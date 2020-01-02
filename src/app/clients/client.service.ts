@@ -41,4 +41,8 @@ export class ClientService {
     return this.http.post<Client>(this.endpoint, client, { headers: this.httpHeaders });
   }
 
+  updateClient(client: Client): Observable<Client> {
+    return this.http.put<Client>(`${this.endpoint}/${client.id}`, client, { headers: this.httpHeaders });
+  }
+
 }
