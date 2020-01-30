@@ -73,7 +73,7 @@ export class ClientFormComponent implements OnInit, OnDestroy {
     }
 
     this.clientForm = new FormGroup({
-      firstName: new FormControl(firstName, [Validators.required]),
+      firstName: new FormControl(firstName, [Validators.required, Validators.minLength(4)]),
       lastName: new FormControl(lastName, [Validators.required]),
       email: new FormControl(email, [Validators.required, Validators.email])
     });

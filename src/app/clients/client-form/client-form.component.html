@@ -30,6 +30,18 @@
             formControlName="firstName"
           >
 
+          <div
+            *ngIf="(clientForm.get('firstName').dirty || clientForm.get('firstName').touched) && !clientForm.get('firstName').valid"
+            class="alert alert-danger"
+          >
+            <div *ngIf="clientForm.get('firstName').errors.required">
+              First name is required
+            </div>
+            <div *ngIf="clientForm.get('firstName').errors.minlength">
+              First name must be at least 4 characters long
+            </div>
+          </div>
+
         </div>
 
       </div>
@@ -53,6 +65,15 @@
             formControlName="lastName"
           >
 
+          <div
+            *ngIf="(clientForm.get('lastName').dirty || clientForm.get('lastName').touched) && !clientForm.get('lastName').valid"
+            class="alert alert-danger"
+          >
+            <div *ngIf="clientForm.get('lastName').errors.required">
+              Last name is required
+            </div>
+          </div>
+
         </div>
 
       </div>
@@ -75,6 +96,18 @@
             class="form-control"
             formControlName="email"
           >
+
+          <div
+            *ngIf="(clientForm.get('email').dirty || clientForm.get('email').touched) && !clientForm.get('email').valid"
+            class="alert alert-danger"
+          >
+            <div *ngIf="clientForm.get('email').errors.required">
+              Email is required
+            </div>
+            <div *ngIf="clientForm.get('email').errors.email">
+              Must be an email
+            </div>
+          </div>
 
         </div>
 
