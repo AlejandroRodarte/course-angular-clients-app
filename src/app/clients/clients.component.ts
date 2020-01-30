@@ -1,7 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Client } from '../shared/models/client';
-import { ClientsService } from './services/clients.service';
 import { Subscription } from 'rxjs';
+import * as fromApp from '../store/app.reducer';
+import * as ClientActions from './store/clients.actions';
+import { Store } from '@ngrx/store';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-clients',
@@ -15,12 +18,26 @@ export class ClientsComponent implements OnInit, OnDestroy {
   public clientSubscription: Subscription;
 
   constructor(
-    private clientsService: ClientsService
+    private store: Store<fromApp.AppState>
   ) { }
 
   ngOnInit() {
-    this.clients = this.clientsService.getClients();
-    this.clientSubscription = this.clientsService.clientsUpdated.subscribe(() => this.clients = this.clientsService.getClients());
+
+    this.clientSubscription =
+      this
+        .store
+        .select(state => state.clients.clients)
+        .pipe(
+          tap(
+            (clients: Client[]) => this.clients = clients
+          )
+        )
+        .subscribe();
+
+  }
+
+  onCreateClient() {
+    this.store.dispatch(new ClientActions.ClearClient());
   }
 
   ngOnDestroy() {

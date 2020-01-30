@@ -1,17 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Client } from '../../shared/models/client';
-import { ClientsService } from '../services/clients.service';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-
-import swal from 'sweetalert2';
+import * as fromApp from '../../store/app.reducer';
+import * as ClientActions from '../store/clients.actions';
+import { Store } from '@ngrx/store';
+import { Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-client-form',
   templateUrl: './client-form.component.html',
   styleUrls: ['./client-form.component.css']
 })
-export class ClientFormComponent implements OnInit {
+export class ClientFormComponent implements OnInit, OnDestroy {
 
   public clientForm: FormGroup;
 
@@ -21,51 +22,40 @@ export class ClientFormComponent implements OnInit {
 
   public editMode = false;
 
+  private clientSubscription: Subscription;
+
   constructor(
-    private clientsService: ClientsService,
-    private router: Router,
-    private route: ActivatedRoute
+    private store: Store<fromApp.AppState>
   ) { }
 
   ngOnInit() {
-    this.loadClient();
-  }
 
-  loadClient(): void {
-
-    this.route.params.subscribe((params: Params) => {
-
-      const id = +params.id;
-
-      if (id) {
-        this.editMode = true;
-        this.client = this.clientsService.getSelectedClient();
-      } else {
-        this.editMode = false;
-      }
-
-      this.loadForm();
-
-    });
+    this.clientSubscription =
+      this
+        .store
+        .select(state => ({
+          client: state.clients.selectedClient,
+          editMode: state.clients.editMode
+        }))
+        .pipe(
+          tap(
+            ({ client, editMode }: { client: Client, editMode: boolean }) => {
+              this.client = client;
+              this.editMode = editMode;
+              this.loadForm();
+            }
+          )
+        )
+        .subscribe();
 
   }
 
   onSubmit() {
 
     if (!this.editMode) {
-
-      this.clientsService.createClient(this.clientForm.value).subscribe(client => {
-        this.router.navigate(['/clients']);
-        swal.fire('New Client', `The client ${client.firstName} has been successfully saved.`, 'success');
-      });
-
+      this.store.dispatch(new ClientActions.AddClientStart(this.clientForm.value));
     } else {
-
-      this.clientsService.updateClient({ id: this.client.id, ...this.clientForm.value }).subscribe(client => {
-        this.router.navigate(['/clients']);
-        swal.fire('New Client', `The client ${client.firstName} has been successfully updated.`, 'success');
-      });
-
+      this.store.dispatch(new ClientActions.UpdateClientStart({ id: this.client.id, ...this.clientForm.value }));
     }
 
   }
@@ -88,6 +78,10 @@ export class ClientFormComponent implements OnInit {
       email: new FormControl(email, [Validators.required, Validators.email])
     });
 
+  }
+
+  ngOnDestroy() {
+    this.clientSubscription.unsubscribe();
   }
 
 }
