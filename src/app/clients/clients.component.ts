@@ -6,6 +6,8 @@ import * as ClientActions from './store/clients.actions';
 import { Store } from '@ngrx/store';
 import { tap } from 'rxjs/operators';
 
+import swal from 'sweetalert2';
+
 @Component({
   selector: 'app-clients',
   templateUrl: './clients.component.html',
@@ -33,6 +35,25 @@ export class ClientsComponent implements OnInit, OnDestroy {
           )
         )
         .subscribe();
+
+  }
+
+  async onDelete(client: Client) {
+
+    const result =
+      await swal.fire({
+        title: 'Are you sure?',
+        text: `Are you sure you want to delete user ${client.firstName}?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      });
+
+    if (result.value) {
+      this.store.dispatch(new ClientActions.DeleteClientStart(client.id));
+    }
 
   }
 

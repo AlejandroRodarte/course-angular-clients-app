@@ -67,6 +67,12 @@ export function clientsReducer(state = initialState, action: ClientActions.Clien
         editMode: false
       };
 
+      case ClientActions.DELETE_CLIENT_SUCCESS:
+        return {
+          ...state,
+          clients: state.clients.filter((client: Client) => client.id !== action.payload)
+        };
+
     default:
       return state;
 

@@ -154,4 +154,37 @@ export class ClientEffects {
 
       );
 
+  @Effect()
+  deleteClient =
+    this
+    .actions$
+    .pipe(
+
+      ofType(ClientActions.DELETE_CLIENT_START),
+
+      switchMap(
+
+        (action: ClientActions.DeleteClientStart) => {
+
+          return this
+                  .http
+                  .delete<null>(`${environment.baseUrl}/clients/${action.payload}`)
+                  .pipe(
+
+                    map(
+                      () => new ClientActions.DeleteClientSuccess(action.payload)
+                    ),
+
+                    tap(
+                      () => swal.fire('Deleted!', 'The client has been deleted', 'success')
+                    )
+
+                  );
+
+        }
+
+      )
+
+    );
+
 }

@@ -53,6 +53,10 @@
             edit
           </th>
 
+          <th>
+            delete
+          </th>
+
         </tr>
 
       </thead>
@@ -90,6 +94,19 @@
               class="btn btn-primary"
             >
               edit
+            </button>
+
+          </td>
+
+          <td>
+
+            <button
+              type="button"
+              name="button"
+              (click)="onDelete(client)"
+              class="btn btn-danger"
+            >
+              delete
             </button>
 
           </td>

@@ -16,6 +16,9 @@ export const ADD_CLIENT_SUCCESS = '[Clients] Add Client Success';
 export const UPDATE_CLIENT_START = '[Clients] Update Client Start';
 export const UPDATE_CLIENT_SUCCESS = '[Clients] Update Client Success';
 
+export const DELETE_CLIENT_START = '[Clients] Delete Client Start';
+export const DELETE_CLIENT_SUCCESS = '[Clients] Delete Client Success';
+
 export type ClientActions =
 GetClientsStart |
 GetClientsSuccess |
@@ -26,7 +29,9 @@ ClearClient |
 AddClientStart |
 AddClientSuccess |
 UpdateClientStart |
-UpdateClientSuccess;
+UpdateClientSuccess |
+DeleteClientStart |
+DeleteClientSuccess;
 
 export class GetClientsStart implements Action {
   readonly type = GET_CLIENTS_START;
@@ -112,6 +117,26 @@ export class UpdateClientSuccess implements Action {
 
   constructor(
     public payload: Client
+  ) { }
+
+}
+
+export class DeleteClientStart implements Action {
+
+  readonly type = DELETE_CLIENT_START;
+
+  constructor(
+    public payload: number
+  ) { }
+
+}
+
+export class DeleteClientSuccess implements Action {
+
+  readonly type = DELETE_CLIENT_SUCCESS;
+
+  constructor(
+    public payload: number
   ) { }
 
 }
