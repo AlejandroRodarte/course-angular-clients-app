@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { formatDate } from '@angular/common';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
@@ -43,8 +44,12 @@ export class ClientEffects {
                         (clients: Client[]) => {
 
                           clients.map(client => {
+
                             client.firstName = client.firstName.toUpperCase();
+                            client.createdAt = formatDate(client.createdAt, 'dd-MM-yyy', 'en-US');
+
                             return client;
+
                           });
 
                           return new ClientActions.GetClientsSuccess(clients);
