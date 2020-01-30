@@ -11,7 +11,7 @@ import { Client } from 'src/app/shared/models/client';
 
 import swal from 'sweetalert2';
 import { Router } from '@angular/router';
-import { CreateClientResponseSuccess, DeleteClientResponseSuccess } from './../../shared/payloads/responses';
+import { CreateClientResponseSuccess, DeleteClientResponseSuccess, Page } from './../../shared/payloads/responses';
 
 @Injectable()
 export class ClientEffects {
@@ -32,18 +32,18 @@ export class ClientEffects {
 
         switchMap(
 
-          () => {
+          (action: ClientActions.GetClientsStart) => {
 
             return this
                     .http
-                    .get<Client[]>(`${environment.baseUrl}/clients`)
+                    .get<Page<Client>>(`${environment.baseUrl}/clients/page/${action.payload}`)
                     .pipe(
 
                       map(
 
-                        (clients: Client[]) => {
+                        (page: Page<Client>) => {
 
-                          clients.map(client => {
+                          page.content.map(client => {
 
                             client.firstName = client.firstName.toUpperCase();
                             // client.createdAt = formatDate(client.createdAt, 'EEEE dd, MMMM yyyy', 'es-MX');
@@ -52,7 +52,7 @@ export class ClientEffects {
 
                           });
 
-                          return new ClientActions.GetClientsSuccess(clients);
+                          return new ClientActions.GetClientsSuccess(page.content);
 
                         }
 

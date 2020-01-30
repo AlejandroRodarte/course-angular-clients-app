@@ -44,7 +44,13 @@ SetFormErrorMessages |
 ClearFormErrorMessages;
 
 export class GetClientsStart implements Action {
+
   readonly type = GET_CLIENTS_START;
+
+  constructor(
+    public payload: number
+  ) { }
+
 }
 
 export class GetClientsSuccess implements Action {

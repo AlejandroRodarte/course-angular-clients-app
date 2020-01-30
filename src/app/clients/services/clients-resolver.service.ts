@@ -32,7 +32,7 @@ export class ClientsResolverService implements Resolve<Client[]> {
 
                   if (clients.length === 0) {
 
-                    this.store.dispatch(new ClientActions.GetClientsStart());
+                    this.store.dispatch(new ClientActions.GetClientsStart(0));
 
                     return this
                             .actions$
