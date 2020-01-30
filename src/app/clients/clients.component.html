@@ -23,7 +23,17 @@
 
     </div>
 
-    <table class="table table-bordered table-striped">
+    <div
+      *ngIf="clients.length === 0"
+      class="alert alert-info mt-2"
+    >
+      No existen clientes registrados en la base de datos
+    </div>
+
+    <table
+      class="table table-bordered table-striped"
+      *ngIf="clients.length > 0"
+    >
 
       <thead>
 
