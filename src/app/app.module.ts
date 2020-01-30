@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import localeMX from '@angular/common/locales/es-MX';
 import { registerLocaleData } from '@angular/common';
@@ -9,7 +9,7 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { StoreModule } from '@ngrx/store';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools'
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { appReducer } from './store/app.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { ClientEffects } from './clients/store/clients.effects';
@@ -35,7 +35,12 @@ registerLocaleData(localeMX, 'es-MX');
       ClientEffects
     ])
   ],
-  providers: [],
+  providers: [
+    {
+      provide: LOCALE_ID,
+      useValue: 'es-MX'
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

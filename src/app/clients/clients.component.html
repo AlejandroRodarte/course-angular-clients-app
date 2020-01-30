@@ -84,7 +84,7 @@
           </td>
 
           <td>
-            {{ client.lastName }}
+            {{ client.lastName | uppercase }}
           </td>
 
           <td>
@@ -92,7 +92,7 @@
           </td>
 
           <td>
-            {{ client.createdAt }}
+            {{ client.createdAt | date:"EEEE dd, MMMM yyyy" }}
           </td>
 
           <td>
