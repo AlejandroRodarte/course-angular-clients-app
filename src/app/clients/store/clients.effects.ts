@@ -46,7 +46,7 @@ export class ClientEffects {
                           clients.map(client => {
 
                             client.firstName = client.firstName.toUpperCase();
-                            client.createdAt = formatDate(client.createdAt, 'dd-MM-yyy', 'en-US');
+                            client.createdAt = formatDate(client.createdAt, 'EEEE dd, MMMM yyyy', 'es-MX');
 
                             return client;
 

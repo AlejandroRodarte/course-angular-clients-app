@@ -1,6 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
+import localeMX from '@angular/common/locales/es-MX';
+import { registerLocaleData } from '@angular/common';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -12,6 +14,8 @@ import { appReducer } from './store/app.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { ClientEffects } from './clients/store/clients.effects';
 import { environment } from 'src/environments/environment';
+
+registerLocaleData(localeMX, 'es-MX');
 
 @NgModule({
   declarations: [
