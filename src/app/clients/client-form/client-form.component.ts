@@ -20,9 +20,13 @@ export class ClientFormComponent implements OnInit, OnDestroy {
 
   public title = 'Create Client';
 
+  public errors: string[] = [];
+
   public editMode = false;
 
   private clientSubscription: Subscription;
+
+  private errorsSubscription: Subscription;
 
   constructor(
     private store: Store<fromApp.AppState>
@@ -43,6 +47,19 @@ export class ClientFormComponent implements OnInit, OnDestroy {
               this.client = client;
               this.editMode = editMode;
               this.loadForm();
+            }
+          )
+        )
+        .subscribe();
+
+    this.errorsSubscription =
+      this
+        .store
+        .select(state => state.clients.formErrors)
+        .pipe(
+          tap(
+            (errors: string[]) => {
+              this.errors = errors;
             }
           )
         )
@@ -72,16 +89,23 @@ export class ClientFormComponent implements OnInit, OnDestroy {
       email = this.client.email;
     }
 
+    // this.clientForm = new FormGroup({
+    //   firstName: new FormControl(firstName, [Validators.required, Validators.minLength(4)]),
+    //   lastName: new FormControl(lastName, [Validators.required]),
+    //   email: new FormControl(email, [Validators.required, Validators.email])
+    // });
+
     this.clientForm = new FormGroup({
-      firstName: new FormControl(firstName, [Validators.required, Validators.minLength(4)]),
-      lastName: new FormControl(lastName, [Validators.required]),
-      email: new FormControl(email, [Validators.required, Validators.email])
+      firstName: new FormControl(firstName),
+      lastName: new FormControl(lastName),
+      email: new FormControl(email)
     });
 
   }
 
   ngOnDestroy() {
     this.clientSubscription.unsubscribe();
+    this.errorsSubscription.unsubscribe();
   }
 
 }

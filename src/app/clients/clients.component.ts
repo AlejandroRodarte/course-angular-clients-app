@@ -87,6 +87,7 @@ export class ClientsComponent implements OnInit, OnDestroy {
 
   onCreateClient() {
     this.store.dispatch(new ClientActions.ClearClient());
+    this.store.dispatch(new ClientActions.ClearFormErrorMessages());
   }
 
   ngOnDestroy() {

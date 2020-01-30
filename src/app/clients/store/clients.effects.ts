@@ -126,14 +126,21 @@ export class ClientEffects {
                       catchError(
                         (errorResponse: HttpErrorResponse) => {
 
-                          this.router.navigate(['/clients']);
+                          if (errorResponse.status === 400) {
+                            return of(new ClientActions.SetFormErrorMessages(errorResponse.error.errors));
+                          } else {
 
-                          return of(new ClientActions.ClientRequestFail({
-                            primaryErrorMessage: 'Error creating the client',
-                            secondaryErrorMessage: errorResponse.error.message
-                          }));
+                            this.router.navigate(['/clients']);
+
+                            return of(new ClientActions.ClientRequestFail({
+                              primaryErrorMessage: 'Error creating the client',
+                              secondaryErrorMessage: errorResponse.error.message
+                            }));
+
+                          }
 
                         }
+
                       )
 
                     );
@@ -177,12 +184,18 @@ export class ClientEffects {
                       catchError(
                         (errorResponse: HttpErrorResponse) => {
 
-                          this.router.navigate(['/clients']);
+                          if (errorResponse.status === 400) {
+                            return of(new ClientActions.SetFormErrorMessages(errorResponse.error.errors));
+                          } else {
 
-                          return of(new ClientActions.ClientRequestFail({
-                            primaryErrorMessage: 'Error updating the client',
-                            secondaryErrorMessage: errorResponse.error.message
-                          }));
+                            this.router.navigate(['/clients']);
+
+                            return of(new ClientActions.ClientRequestFail({
+                              primaryErrorMessage: 'Error updating the client',
+                              secondaryErrorMessage: errorResponse.error.message
+                            }));
+
+                          }
 
                         }
                       )

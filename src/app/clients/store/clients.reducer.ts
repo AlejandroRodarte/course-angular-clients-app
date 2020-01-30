@@ -8,6 +8,7 @@ export interface ClientsReducerState {
   editMode: boolean;
   primaryErrorMessage: string;
   secondaryErrorMessage: string;
+  formErrors: string[];
 }
 
 const initialState: ClientsReducerState = {
@@ -15,7 +16,8 @@ const initialState: ClientsReducerState = {
   selectedClient: null,
   editMode: false,
   primaryErrorMessage: null,
-  secondaryErrorMessage: null
+  secondaryErrorMessage: null,
+  formErrors: []
 };
 
 export function clientsReducer(state = initialState, action: ClientActions.ClientActions) {
@@ -39,7 +41,8 @@ export function clientsReducer(state = initialState, action: ClientActions.Clien
       return {
         ...state,
         selectedClient: state.clients.find(client => client.id === action.payload),
-        editMode: true
+        editMode: true,
+        formErrors: []
       };
 
     case ClientActions.CLEAR_CLIENT:
@@ -52,7 +55,8 @@ export function clientsReducer(state = initialState, action: ClientActions.Clien
     case ClientActions.ADD_CLIENT_SUCCESS:
       return {
         ...state,
-        clients: [...state.clients, action.payload]
+        clients: [...state.clients, action.payload],
+        formErrors: []
       };
 
     case ClientActions.UPDATE_CLIENT_SUCCESS:
@@ -68,7 +72,8 @@ export function clientsReducer(state = initialState, action: ClientActions.Clien
 
         }),
         selectedClient: null,
-        editMode: false
+        editMode: false,
+        formErrors: []
       };
 
       case ClientActions.DELETE_CLIENT_SUCCESS:
@@ -89,6 +94,18 @@ export function clientsReducer(state = initialState, action: ClientActions.Clien
           ...state,
           primaryErrorMessage: null,
           secondaryErrorMessage: null
+        };
+
+      case ClientActions.SET_FORM_ERROR_MESSAGES:
+        return {
+          ...state,
+          formErrors: action.payload
+        };
+
+      case ClientActions.CLEAR_FORM_ERROR_MESSAGES:
+        return {
+          ...state,
+          formErrors: []
         };
 
     default:
