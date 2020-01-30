@@ -17,7 +17,8 @@ export class ClientsComponent implements OnInit, OnDestroy {
 
   public clients: Client[];
 
-  public clientSubscription: Subscription;
+  private clientSubscription: Subscription;
+  private errorSubscription: Subscription;
 
   constructor(
     private store: Store<fromApp.AppState>
@@ -32,6 +33,33 @@ export class ClientsComponent implements OnInit, OnDestroy {
         .pipe(
           tap(
             (clients: Client[]) => this.clients = clients
+          )
+        )
+        .subscribe();
+
+    this.errorSubscription =
+      this
+        .store
+        .select(state => ({
+          primaryErrorMessage: state.clients.primaryErrorMessage,
+          secondaryErrorMessage: state.clients.secondaryErrorMessage
+        }))
+        .pipe(
+          tap(
+
+            ({ primaryErrorMessage, secondaryErrorMessage }:
+              { primaryErrorMessage: string, secondaryErrorMessage: string }) => {
+
+                if (primaryErrorMessage && secondaryErrorMessage) {
+
+                  swal
+                  .fire(primaryErrorMessage, secondaryErrorMessage, 'error')
+                  .then(() => this.store.dispatch(new ClientActions.ClearErrorMessages()));
+
+                }
+
+              }
+
           )
         )
         .subscribe();
@@ -63,6 +91,7 @@ export class ClientsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.clientSubscription.unsubscribe();
+    this.errorSubscription.unsubscribe();
   }
 
 }

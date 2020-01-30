@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 import * as ClientActions from './clients.actions';
-import { switchMap, map, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { switchMap, map, tap, catchError } from 'rxjs/operators';
 import { environment } from './../../../environments/environment';
 import { Client } from 'src/app/shared/models/client';
 
 import swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import { CreateClientResponseSuccess, DeleteClientResponseSuccess } from './../../shared/payloads/responses';
 
 @Injectable()
 export class ClientEffects {
@@ -67,6 +69,19 @@ export class ClientEffects {
 
                       map(
                         (client: Client) => new ClientActions.GetClientSuccess(client)
+                      ),
+
+                      catchError(
+                        (errorResponse: HttpErrorResponse) => {
+
+                          this.router.navigate(['/clients']);
+
+                          return of(new ClientActions.ClientRequestFail({
+                            primaryErrorMessage: 'Error fetching the client',
+                            secondaryErrorMessage: errorResponse.error.message
+                          }));
+
+                        }
                       )
 
                     );
@@ -91,21 +106,34 @@ export class ClientEffects {
 
             return this
                     .http
-                    .post<Client>(`${environment.baseUrl}/clients`, action.payload)
+                    .post<CreateClientResponseSuccess>(`${environment.baseUrl}/clients`, action.payload)
                     .pipe(
 
                       map(
 
-                        (client: Client) => {
-                          client.createdAt = client.createdAt.substring(0, 10);
-                          swal.fire('New Client', `The client ${client.firstName} has been successfully saved.`, 'success');
-                          return new ClientActions.AddClientSuccess(client);
+                        (response: CreateClientResponseSuccess) => {
+                          response.client.createdAt = response.client.createdAt.substring(0, 10);
+                          swal.fire(response.message, `The client ${response.client.firstName} has been successfully saved.`, 'success');
+                          return new ClientActions.AddClientSuccess(response.client);
                         }
 
                       ),
 
                       tap(
                         () => this.router.navigate(['/clients'])
+                      ),
+
+                      catchError(
+                        (errorResponse: HttpErrorResponse) => {
+
+                          this.router.navigate(['/clients']);
+
+                          return of(new ClientActions.ClientRequestFail({
+                            primaryErrorMessage: 'Error creating the client',
+                            secondaryErrorMessage: errorResponse.error.message
+                          }));
+
+                        }
                       )
 
                     );
@@ -130,20 +158,33 @@ export class ClientEffects {
 
             return this
                     .http
-                    .put<Client>(`${environment.baseUrl}/clients/${action.payload.id}`, action.payload)
+                    .put<CreateClientResponseSuccess>(`${environment.baseUrl}/clients/${action.payload.id}`, action.payload)
                     .pipe(
 
                       map(
 
-                        (client: Client) => {
-                          swal.fire('New Client', `The client ${client.firstName} has been successfully updated.`, 'success');
-                          return new ClientActions.UpdateClientSuccess(client);
+                        (response: CreateClientResponseSuccess) => {
+                          swal.fire(response.message, `The client ${response.client.firstName} has been successfully updated.`, 'success');
+                          return new ClientActions.UpdateClientSuccess(response.client);
                         }
 
                       ),
 
                       tap(
                         () => this.router.navigate(['/clients'])
+                      ),
+
+                      catchError(
+                        (errorResponse: HttpErrorResponse) => {
+
+                          this.router.navigate(['/clients']);
+
+                          return of(new ClientActions.ClientRequestFail({
+                            primaryErrorMessage: 'Error updating the client',
+                            secondaryErrorMessage: errorResponse.error.message
+                          }));
+
+                        }
                       )
 
                     );
@@ -168,15 +209,22 @@ export class ClientEffects {
 
           return this
                   .http
-                  .delete<null>(`${environment.baseUrl}/clients/${action.payload}`)
+                  .delete<DeleteClientResponseSuccess>(`${environment.baseUrl}/clients/${action.payload}`)
                   .pipe(
+
+                    tap(
+                      (response: DeleteClientResponseSuccess) => swal.fire('Client Deleted', response.message, 'success')
+                    ),
 
                     map(
                       () => new ClientActions.DeleteClientSuccess(action.payload)
                     ),
 
-                    tap(
-                      () => swal.fire('Deleted!', 'The client has been deleted', 'success')
+                    catchError(
+                      (errorResponse: HttpErrorResponse) => of(new ClientActions.ClientRequestFail({
+                        primaryErrorMessage: 'Error deleting the client',
+                        secondaryErrorMessage: errorResponse.error.message
+                      }))
                     )
 
                   );

@@ -6,12 +6,16 @@ export interface ClientsReducerState {
   clients: Client[];
   selectedClient: Client;
   editMode: boolean;
+  primaryErrorMessage: string;
+  secondaryErrorMessage: string;
 }
 
 const initialState: ClientsReducerState = {
   clients: [],
   selectedClient: null,
-  editMode: false
+  editMode: false,
+  primaryErrorMessage: null,
+  secondaryErrorMessage: null
 };
 
 export function clientsReducer(state = initialState, action: ClientActions.ClientActions) {
@@ -71,6 +75,20 @@ export function clientsReducer(state = initialState, action: ClientActions.Clien
         return {
           ...state,
           clients: state.clients.filter((client: Client) => client.id !== action.payload)
+        };
+
+      case ClientActions.CLIENT_REQUEST_FAIL:
+        return {
+          ...state,
+          primaryErrorMessage: action.payload.primaryErrorMessage,
+          secondaryErrorMessage: action.payload.secondaryErrorMessage
+        };
+
+      case ClientActions.CLEAR_ERROR_MESSAGES:
+        return {
+          ...state,
+          primaryErrorMessage: null,
+          secondaryErrorMessage: null
         };
 
     default:

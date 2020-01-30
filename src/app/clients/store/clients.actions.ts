@@ -19,6 +19,9 @@ export const UPDATE_CLIENT_SUCCESS = '[Clients] Update Client Success';
 export const DELETE_CLIENT_START = '[Clients] Delete Client Start';
 export const DELETE_CLIENT_SUCCESS = '[Clients] Delete Client Success';
 
+export const CLIENT_REQUEST_FAIL = '[Clients] Client Request Fail';
+export const CLEAR_ERROR_MESSAGES = '[Clients] Clear Error Messages';
+
 export type ClientActions =
 GetClientsStart |
 GetClientsSuccess |
@@ -31,7 +34,9 @@ AddClientSuccess |
 UpdateClientStart |
 UpdateClientSuccess |
 DeleteClientStart |
-DeleteClientSuccess;
+DeleteClientSuccess |
+ClientRequestFail |
+ClearErrorMessages;
 
 export class GetClientsStart implements Action {
   readonly type = GET_CLIENTS_START;
@@ -139,4 +144,21 @@ export class DeleteClientSuccess implements Action {
     public payload: number
   ) { }
 
+}
+
+export class ClientRequestFail implements Action {
+
+  readonly type = CLIENT_REQUEST_FAIL;
+
+  constructor(
+    public payload: {
+      primaryErrorMessage: string,
+      secondaryErrorMessage: string
+    }
+  ) { }
+
+}
+
+export class ClearErrorMessages implements Action {
+  readonly type = CLEAR_ERROR_MESSAGES;
 }
