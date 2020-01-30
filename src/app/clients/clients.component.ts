@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Client } from './client';
-import { ClientService } from './client.service';
+import { Client } from '../shared/models/client';
+import { ClientsService } from './services/clients.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -14,11 +14,13 @@ export class ClientsComponent implements OnInit, OnDestroy {
 
   public clientSubscription: Subscription;
 
-  constructor(private clientService: ClientService) { }
+  constructor(
+    private clientsService: ClientsService
+  ) { }
 
   ngOnInit() {
-    this.clientService.seed();
-    this.clientSubscription = this.clientService.clientsUpdated.subscribe(() => this.clients = this.clientService.getClients());
+    this.clients = this.clientsService.getClients();
+    this.clientSubscription = this.clientsService.clientsUpdated.subscribe(() => this.clients = this.clientsService.getClients());
   }
 
   ngOnDestroy() {

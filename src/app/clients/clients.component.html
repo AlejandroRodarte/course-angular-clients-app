@@ -1,43 +1,104 @@
 <div class="card bg-light mb-3">
-  <div class="card-header">Clients</div>
+
+  <div class="card-header">
+    Clients
+  </div>
+
   <div class="card-body">
-    <h5 class="card-title">Clients List</h5>
+
+    <h5 class="card-title">
+      Clients List
+    </h5>
 
     <div>
-      <button class="btn btn-rounded btn-primary"
-              type="button"
-              [routerLink]="['/clients/form']">
+
+      <button
+        class="btn btn-rounded btn-primary"
+        type="button"
+        [routerLink]="['/clients/form']"
+      >
         Create Client
       </button>
+
     </div>
 
     <table class="table table-bordered table-striped">
+
       <thead>
+
         <tr>
-          <th>id</th>
-          <th>first name</th>
-          <th>last name</th>
-          <th>email</th>
-          <th>date</th>
-          <th>edit</th>
+
+          <th>
+            id
+          </th>
+
+          <th>
+            first name
+          </th>
+
+          <th>
+            last name
+          </th>
+
+          <th>
+            email
+          </th>
+
+          <th>
+            date
+          </th>
+
+          <th>
+            edit
+          </th>
+
         </tr>
+
       </thead>
 
       <tbody>
+
         <tr *ngFor="let client of clients">
-          <td>{{ client.id }}</td>
-          <td>{{ client.firstName }}</td>
-          <td>{{ client.lastName }}</td>
-          <td>{{ client.email }}</td>
-          <td>{{ client.createdAt }}</td>
+
           <td>
-            <button type="button" name="button" [routerLink]="['/clients/form', client.id]" class="btn btn-primary">
+            {{ client.id }}
+          </td>
+
+          <td>
+            {{ client.firstName }}
+          </td>
+
+          <td>
+            {{ client.lastName }}
+          </td>
+
+          <td>
+            {{ client.email }}
+          </td>
+
+          <td>
+            {{ client.createdAt }}
+          </td>
+
+          <td>
+
+            <button
+              type="button"
+              name="button"
+              [routerLink]="['/clients/form', client.id]"
+              class="btn btn-primary"
+            >
               edit
             </button>
+
           </td>
+
         </tr>
+
       </tbody>
+
     </table>
 
   </div>
+
 </div>

@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ClientsComponent } from './clients/clients.component';
-import { ClientFormComponent } from './clients/client-form/client-form.component';
 
 const routes: Routes = [
   {
@@ -11,15 +9,7 @@ const routes: Routes = [
   },
   {
     path: 'clients',
-    component: ClientsComponent
-  },
-  {
-    path: 'clients/form',
-    component: ClientFormComponent
-  },
-  {
-    path: 'clients/form/:id',
-    component: ClientFormComponent
+    loadChildren: () => import('./clients/clients.module').then(m => m.ClientsModule)
   }
 ];
 
