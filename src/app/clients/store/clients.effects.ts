@@ -39,7 +39,18 @@ export class ClientEffects {
                     .pipe(
 
                       map(
-                        (clients: Client[]) => new ClientActions.GetClientsSuccess(clients)
+
+                        (clients: Client[]) => {
+
+                          clients.map(client => {
+                            client.firstName = client.firstName.toUpperCase();
+                            return client;
+                          });
+
+                          return new ClientActions.GetClientsSuccess(clients);
+
+                        }
+
                       )
 
                     );
