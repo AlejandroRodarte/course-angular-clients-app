@@ -8,10 +8,7 @@ import { ClientResolverService } from './services/client-resolver.service';
 const clientRoutes: Routes = [
   {
     path: '',
-    component: ClientsComponent,
-    resolve: [
-      ClientsResolverService
-    ]
+    redirectTo: 'page/0'
   },
   {
     path: 'page/:page',

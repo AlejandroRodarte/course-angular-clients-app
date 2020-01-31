@@ -9,6 +9,7 @@ export interface PageRedirectionParams {
 }
 
 const selectors = {
+
   pageRedirection: (state: fromApp.AppState) => ({
     wouldPageChangeOnAdd: state.clients.paginationParams.totalElements % state.clients.paginationParams.size === 0,
     wouldPageChangeOnDelete: state.clients.paginationParams.totalElements % state.clients.paginationParams.size === 1,
@@ -16,7 +17,11 @@ const selectors = {
     number: state.clients.paginationParams.number,
     first: state.clients.paginationParams.first
   }),
+
+  getCurrentPage: (state: fromApp.AppState) => state.clients.paginationParams.number,
+
   getClient: (id: number) => (state: fromApp.AppState) => state.clients.clients.find(client => client.id === id)
+
 };
 
 export default selectors;

@@ -14,6 +14,7 @@ import { appReducer } from './store/app.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { ClientEffects } from './clients/store/clients.effects';
 import { environment } from 'src/environments/environment';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 registerLocaleData(localeMX, 'es-MX');
 
@@ -33,7 +34,8 @@ registerLocaleData(localeMX, 'es-MX');
     }),
     EffectsModule.forRoot([
       ClientEffects
-    ])
+    ]),
+    BrowserAnimationsModule
   ],
   providers: [
     {

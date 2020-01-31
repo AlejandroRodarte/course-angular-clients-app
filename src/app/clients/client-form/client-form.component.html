@@ -136,12 +136,16 @@
         <div class="col-sm-6">
 
           <input
-            type="date"
-            name="createdAt"
-            id="createdAt"
+            [matDatepicker]="myDatepicker"
             class="form-control"
+            name="createdAt"
             formControlName="createdAt"
+            style="display: inline-block; width: 300px;"
           >
+
+          <mat-datepicker-toggle [for]="myDatepicker"></mat-datepicker-toggle>
+
+          <mat-datepicker #myDatepicker></mat-datepicker>
 
         </div>
 
