@@ -82,11 +82,13 @@ export class ClientFormComponent implements OnInit, OnDestroy {
     let firstName: string | null = null;
     let lastName: string | null = null;
     let email: string | null = null;
+    let createdAt: string | null = null;
 
     if (this.editMode) {
       firstName = this.client.firstName;
       lastName = this.client.lastName;
       email = this.client.email;
+      createdAt = this.client.createdAt;
     }
 
     // this.clientForm = new FormGroup({
@@ -98,7 +100,8 @@ export class ClientFormComponent implements OnInit, OnDestroy {
     this.clientForm = new FormGroup({
       firstName: new FormControl(firstName),
       lastName: new FormControl(lastName),
-      email: new FormControl(email)
+      email: new FormControl(email),
+      createdAt: new FormControl(createdAt)
     });
 
   }

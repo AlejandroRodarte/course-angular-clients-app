@@ -14,7 +14,7 @@ import swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { CreateClientResponseSuccess, DeleteClientResponseSuccess, Page } from './../../shared/payloads/responses';
 import { Store } from '@ngrx/store';
-import { Location } from '@angular/common';
+import { Location, formatDate } from '@angular/common';
 
 @Injectable()
 export class ClientEffects {
@@ -51,7 +51,7 @@ export class ClientEffects {
                           page.content.map(client => {
 
                             client.firstName = client.firstName.toUpperCase();
-                            // client.createdAt = formatDate(client.createdAt, 'EEEE dd, MMMM yyyy', 'es-MX');
+                            // client.createdAt = formatDate(client.createdAt, 'EEEE dd, MMMM yyyy', 'es-MX', 'America/Chihuahua');
 
                             return client;
 
