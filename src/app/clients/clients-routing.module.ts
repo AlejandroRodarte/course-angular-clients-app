@@ -14,6 +14,13 @@ const clientRoutes: Routes = [
     ]
   },
   {
+    path: 'page/:page',
+    component: ClientsComponent,
+    resolve: [
+      ClientsResolverService
+    ]
+  },
+  {
     path: 'form',
     component: ClientFormComponent
   },

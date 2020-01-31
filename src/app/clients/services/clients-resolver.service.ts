@@ -30,26 +30,21 @@ export class ClientsResolverService implements Resolve<Client[]> {
 
                 (clients: Client[]) => {
 
+                  const page = +route.params.page;
+
                   if (clients.length === 0) {
 
-                    this.store.dispatch(new ClientActions.GetClientsStart(0));
+                    if (isNaN(page)) {
+                      this.store.dispatch(new ClientActions.GetClientsStart(0));
+                    } else {
+                      this.store.dispatch(new ClientActions.GetClientsStart(page));
+                    }
 
-                    return this
-                            .actions$
-                            .pipe(
-
-                              ofType(ClientActions.GET_CLIENTS_SUCCESS),
-
-                              take(1),
-
-                              map(
-                                (action: ClientActions.GetClientsSuccess) => action.payload
-                              )
-
-                            );
+                    return this.waitForSuccess();
 
                   } else {
-                    return of(clients).pipe(take(1));
+                    this.store.dispatch(new ClientActions.GetClientsStart(page));
+                    return this.waitForSuccess();
                   }
 
                 }
@@ -65,6 +60,24 @@ export class ClientsResolverService implements Resolve<Client[]> {
     return this
             .store
             .select(state => state.clients.clients);
+
+  }
+
+  waitForSuccess() {
+
+    return this
+            .actions$
+            .pipe(
+
+              ofType(ClientActions.GET_CLIENTS_SUCCESS),
+
+              take(1),
+
+              map(
+                (action: ClientActions.GetClientsSuccess) => action.payload.clients
+              )
+
+            );
 
   }
 

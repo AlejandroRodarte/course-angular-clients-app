@@ -1,5 +1,6 @@
 import { Action } from '@ngrx/store';
 import { Client } from 'src/app/shared/models/client';
+import { PaginationParams } from 'src/app/shared/payloads/pagination';
 
 export const GET_CLIENTS_START = '[Clients] Get Clients Start';
 export const GET_CLIENTS_SUCCESS = '[Clients] Get Clients Success';
@@ -58,7 +59,10 @@ export class GetClientsSuccess implements Action {
   readonly type = GET_CLIENTS_SUCCESS;
 
   constructor(
-    public payload: Client[]
+    public payload: {
+      clients: Client[],
+      paginationParams: PaginationParams
+    }
   ) { }
 
 }

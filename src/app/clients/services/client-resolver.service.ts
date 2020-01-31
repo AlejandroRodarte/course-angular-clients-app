@@ -52,7 +52,7 @@ export class ClientResolverService implements Resolve<Client> {
                                 (client: Client) => {
 
                                   if (!client) {
-                                    this.router.navigate(['/clients']);
+                                    this.router.navigate(['/clients/page', 0]);
                                   }
 
                                 }

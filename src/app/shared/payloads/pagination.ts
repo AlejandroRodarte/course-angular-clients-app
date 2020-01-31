@@ -13,3 +13,14 @@ export interface Pageable {
   paged: boolean;
   unpaged: boolean;
 }
+
+export interface PaginationParams {
+  first: boolean;
+  last: boolean;
+  empty: boolean;
+  totalPages: number;
+  totalElements: number;
+  size: number;
+  number: number;
+  numberOfElements: number;
+}

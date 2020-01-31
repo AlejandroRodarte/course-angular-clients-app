@@ -1,6 +1,7 @@
 import { Client } from 'src/app/shared/models/client';
 
 import * as ClientActions from './clients.actions';
+import { PaginationParams } from 'src/app/shared/payloads/pagination';
 
 export interface ClientsReducerState {
   clients: Client[];
@@ -9,6 +10,7 @@ export interface ClientsReducerState {
   primaryErrorMessage: string;
   secondaryErrorMessage: string;
   formErrors: string[];
+  paginationParams: PaginationParams;
 }
 
 const initialState: ClientsReducerState = {
@@ -17,7 +19,17 @@ const initialState: ClientsReducerState = {
   editMode: false,
   primaryErrorMessage: null,
   secondaryErrorMessage: null,
-  formErrors: []
+  formErrors: [],
+  paginationParams: {
+    first: false,
+    last: false,
+    empty: false,
+    totalPages: 0,
+    totalElements: 0,
+    size: 0,
+    number: 0,
+    numberOfElements: 0
+  }
 };
 
 export function clientsReducer(state = initialState, action: ClientActions.ClientActions) {
@@ -27,7 +39,8 @@ export function clientsReducer(state = initialState, action: ClientActions.Clien
     case ClientActions.GET_CLIENTS_SUCCESS:
       return {
         ...state,
-        clients: action.payload
+        clients: action.payload.clients,
+        paginationParams: action.payload.paginationParams
       };
 
     case ClientActions.GET_CLIENT_SUCCESS:

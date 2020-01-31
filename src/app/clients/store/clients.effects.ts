@@ -1,17 +1,20 @@
 import { Injectable } from '@angular/core';
-import { formatDate } from '@angular/common';
+import * as fromApp from '../../store/app.reducer';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 import * as ClientActions from './clients.actions';
+import selectors, { PageRedirectionParams } from '../../store/selectors';
 import { of } from 'rxjs';
-import { switchMap, map, tap, catchError } from 'rxjs/operators';
+import { switchMap, map, tap, catchError, withLatestFrom } from 'rxjs/operators';
 import { environment } from './../../../environments/environment';
 import { Client } from 'src/app/shared/models/client';
 
 import swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { CreateClientResponseSuccess, DeleteClientResponseSuccess, Page } from './../../shared/payloads/responses';
+import { Store } from '@ngrx/store';
+import { Location } from '@angular/common';
 
 @Injectable()
 export class ClientEffects {
@@ -19,7 +22,9 @@ export class ClientEffects {
   constructor(
     private actions$: Actions,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private store: Store<fromApp.AppState>,
+    private location: Location
   ) { }
 
   @Effect()
@@ -52,7 +57,22 @@ export class ClientEffects {
 
                           });
 
-                          return new ClientActions.GetClientsSuccess(page.content);
+                          return new ClientActions.GetClientsSuccess({
+
+                            clients: page.content,
+
+                            paginationParams: {
+                              first: page.first,
+                              last: page.last,
+                              empty: page.empty,
+                              totalPages: page.totalPages,
+                              totalElements: page.totalElements,
+                              size: page.size,
+                              number: page.number,
+                              numberOfElements: page.numberOfElements
+                            }
+
+                          });
 
                         }
 
@@ -90,7 +110,7 @@ export class ClientEffects {
                       catchError(
                         (errorResponse: HttpErrorResponse) => {
 
-                          this.router.navigate(['/clients']);
+                          this.router.navigate(['/clients/page', 0]);
 
                           return of(new ClientActions.ClientRequestFail({
                             primaryErrorMessage: 'Error fetching the client',
@@ -116,9 +136,11 @@ export class ClientEffects {
 
         ofType(ClientActions.ADD_CLIENT_START),
 
+        withLatestFrom(this.store.select(selectors.pageRedirection)),
+
         switchMap(
 
-          (action: ClientActions.AddClientStart) => {
+          ([action, pageRedirection]: [ClientActions.AddClientStart, PageRedirectionParams]) => {
 
             return this
                     .http
@@ -136,7 +158,8 @@ export class ClientEffects {
                       ),
 
                       tap(
-                        () => this.router.navigate(['/clients'])
+                        () => pageRedirection.wouldPageChangeOnAdd ? this.router.navigate(['/clients/page', pageRedirection.totalPages])
+                        : this.router.navigate(['/clients/page', pageRedirection.totalPages - 1])
                       ),
 
                       catchError(
@@ -146,7 +169,7 @@ export class ClientEffects {
                             return of(new ClientActions.SetFormErrorMessages(errorResponse.error.errors));
                           } else {
 
-                            this.router.navigate(['/clients']);
+                            this.location.back();
 
                             return of(new ClientActions.ClientRequestFail({
                               primaryErrorMessage: 'Error creating the client',
@@ -194,7 +217,7 @@ export class ClientEffects {
                       ),
 
                       tap(
-                        () => this.router.navigate(['/clients'])
+                        () => this.location.back()
                       ),
 
                       catchError(
@@ -204,7 +227,7 @@ export class ClientEffects {
                             return of(new ClientActions.SetFormErrorMessages(errorResponse.error.errors));
                           } else {
 
-                            this.router.navigate(['/clients']);
+                            this.location.back();
 
                             return of(new ClientActions.ClientRequestFail({
                               primaryErrorMessage: 'Error updating the client',
@@ -232,9 +255,11 @@ export class ClientEffects {
 
       ofType(ClientActions.DELETE_CLIENT_START),
 
+      withLatestFrom(this.store.select(selectors.pageRedirection)),
+
       switchMap(
 
-        (action: ClientActions.DeleteClientStart) => {
+        ([action, pageRedirection]: [ClientActions.DeleteClientStart, PageRedirectionParams]) => {
 
           return this
                   .http
@@ -247,6 +272,11 @@ export class ClientEffects {
 
                     map(
                       () => new ClientActions.DeleteClientSuccess(action.payload)
+                    ),
+
+                    tap(
+                      () => pageRedirection.wouldPageChangeOnDelete && !pageRedirection.first ?
+                      this.router.navigate(['/clients/page', pageRedirection.number - 1]) : ''
                     ),
 
                     catchError(

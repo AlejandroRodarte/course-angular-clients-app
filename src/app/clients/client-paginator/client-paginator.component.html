@@ -1,0 +1,58 @@
+<nav
+  aria-label="Page navigation example"
+  *ngIf="paginationParams.numberOfElements > 0"
+>
+
+  <ul class="pagination">
+
+    <li
+      class="page-item"
+      [routerLink]="['/clients/page', paginationParams.number - 1]"
+      [ngClass]="{ disabled: paginationParams.first }"
+    >
+      <a class="page-link">
+        <<
+      </a>
+    </li>
+
+    <li
+      class="page-item"
+      [routerLink]="['/clients/page', 0]"
+    >
+      <a class="page-link">
+        First
+      </a>
+    </li>
+
+    <li
+      class="page-item"
+      [routerLink]="['/clients/page', page - 1]"
+      routerLinkActive="active"
+      *ngFor="let page of pagesArray"
+    >
+      <a class="page-link">
+        {{ page }}
+      </a>
+    </li>
+
+    <li
+      class="page-item"
+      [routerLink]="['/clients/page', paginationParams.totalPages - 1]"
+    >
+      <a class="page-link">
+        Last
+      </a>
+    </li>
+
+    <li
+      class="page-item"
+      [routerLink]="['/clients/page', paginationParams.number + 1]"
+    >
+      <a class="page-link">
+        >>
+      </a>
+    </li>
+
+  </ul>
+
+</nav>
