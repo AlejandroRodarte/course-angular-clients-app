@@ -5,7 +5,8 @@ export class Client {
     public lastName: string,
     public email: string,
     public id?: number,
-    public createdAt?: string
+    public createdAt?: string,
+    public image?: string
   ) { }
 
 }

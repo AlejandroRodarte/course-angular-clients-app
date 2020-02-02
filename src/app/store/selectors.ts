@@ -20,7 +20,9 @@ const selectors = {
 
   getCurrentPage: (state: fromApp.AppState) => state.clients.paginationParams.number,
 
-  getClient: (id: number) => (state: fromApp.AppState) => state.clients.clients.find(client => client.id === id)
+  getSelectedClient: (state: fromApp.AppState) => state.clients.selectedClient,
+
+  getDownloadProgress: (state: fromApp.AppState) => state.clients.downloadProgress
 
 };
 

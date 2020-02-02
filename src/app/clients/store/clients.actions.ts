@@ -26,6 +26,11 @@ export const CLEAR_ERROR_MESSAGES = '[Clients] Clear Error Messages';
 export const SET_FORM_ERROR_MESSAGES = '[Clients] Set Form Error Messages';
 export const CLEAR_FORM_ERROR_MESSAGES = '[Clients] Clear Form Error Messages';
 
+export const UPLOAD_IMAGE_START = '[Clients] Upload Image Start';
+export const UPLOAD_IMAGE_SUCCESS = '[Clients] Upload Image Success';
+
+export const SET_UPLOAD_PROGRESS = '[Clients] Set Upload Progress';
+
 export type ClientActions =
 GetClientsStart |
 GetClientsSuccess |
@@ -42,7 +47,10 @@ DeleteClientSuccess |
 ClientRequestFail |
 ClearErrorMessages |
 SetFormErrorMessages |
-ClearFormErrorMessages;
+ClearFormErrorMessages |
+UploadImageStart |
+UploadImageSuccess |
+SetUploadProgress;
 
 export class GetClientsStart implements Action {
 
@@ -190,4 +198,37 @@ export class SetFormErrorMessages implements Action {
 
 export class ClearFormErrorMessages implements Action {
   readonly type = CLEAR_FORM_ERROR_MESSAGES;
+}
+
+export class UploadImageStart implements Action {
+
+  readonly type = UPLOAD_IMAGE_START;
+
+  constructor(
+    public payload: {
+      image: File,
+      id: number
+    }
+  ) { }
+
+}
+
+export class UploadImageSuccess implements Action {
+
+  readonly type = UPLOAD_IMAGE_SUCCESS;
+
+  constructor(
+    public payload: Client
+  ) { }
+
+}
+
+export class SetUploadProgress implements Action {
+
+  readonly type = SET_UPLOAD_PROGRESS;
+
+  constructor(
+    public payload: number
+  ) { }
+
 }

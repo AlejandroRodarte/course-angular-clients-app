@@ -7,6 +7,7 @@ import { Store } from '@ngrx/store';
 import { tap } from 'rxjs/operators';
 
 import swal from 'sweetalert2';
+import selectors from '../store/selectors';
 
 @Component({
   selector: 'app-clients',
@@ -17,6 +18,9 @@ export class ClientsComponent implements OnInit, OnDestroy {
 
   public clients: Client[];
 
+  public selectedClient: Client;
+
+  private clientsSubscription: Subscription;
   private clientSubscription: Subscription;
   private errorSubscription: Subscription;
 
@@ -26,13 +30,24 @@ export class ClientsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.clientSubscription =
+    this.clientsSubscription =
       this
         .store
         .select(state => state.clients.clients)
         .pipe(
           tap(
             (clients: Client[]) => this.clients = clients
+          )
+        )
+        .subscribe();
+
+    this.clientSubscription =
+      this
+        .store
+        .select(selectors.getSelectedClient)
+        .pipe(
+          tap(
+            (selectedClient: Client) => this.selectedClient = selectedClient
           )
         )
         .subscribe();
@@ -90,7 +105,12 @@ export class ClientsComponent implements OnInit, OnDestroy {
     this.store.dispatch(new ClientActions.ClearFormErrorMessages());
   }
 
+  onSelectClient(id: number) {
+    this.store.dispatch(new ClientActions.SelectClient(id));
+  }
+
   ngOnDestroy() {
+    this.clientsSubscription.unsubscribe();
     this.clientSubscription.unsubscribe();
     this.errorSubscription.unsubscribe();
   }

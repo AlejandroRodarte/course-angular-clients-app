@@ -1,3 +1,6 @@
+<app-client-detail [selectedClient]="selectedClient">
+</app-client-detail>
+
 <div class="card bg-light mb-3">
 
   <div class="card-header">
@@ -40,7 +43,7 @@
         <tr>
 
           <th>
-            id
+            image
           </th>
 
           <th>
@@ -76,7 +79,25 @@
         <tr *ngFor="let client of clients">
 
           <td>
-            {{ client.id }}
+
+            <img
+              *ngIf="client.image"
+              [src]="'http://localhost:8080/api/clients/image/' + client.image"
+              alt="No image for this user"
+              class="img-thumbnail rounded"
+              style="width: 250px; cursor: pointer;"
+              (click)="onSelectClient(client.id)"
+            >
+
+            <img
+              *ngIf="!client.image"
+              src="http://localhost:8080/images/no-user.png"
+              alt="No image for this user"
+              class="img-thumbnail rounded"
+              style="width: 250px; cursor: pointer;"
+              (click)="onSelectClient(client.id)"
+            >
+
           </td>
 
           <td>

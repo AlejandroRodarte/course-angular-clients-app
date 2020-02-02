@@ -8,12 +8,14 @@ import { NgModule } from '@angular/core';
 import { ClientPaginatorComponent } from './client-paginator/client-paginator.component';
 import { MatDatepickerModule } from '@angular/material';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { ClientDetailComponent } from './client-detail/client-detail.component';
 
 @NgModule({
   declarations: [
     ClientsComponent,
     ClientFormComponent,
-    ClientPaginatorComponent
+    ClientPaginatorComponent,
+    ClientDetailComponent
   ],
   imports: [
     CommonModule,

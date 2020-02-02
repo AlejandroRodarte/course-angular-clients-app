@@ -11,6 +11,7 @@ export interface ClientsReducerState {
   secondaryErrorMessage: string;
   formErrors: string[];
   paginationParams: PaginationParams;
+  downloadProgress: number;
 }
 
 const initialState: ClientsReducerState = {
@@ -29,7 +30,8 @@ const initialState: ClientsReducerState = {
     size: 0,
     number: 0,
     numberOfElements: 0
-  }
+  },
+  downloadProgress: 0
 };
 
 export function clientsReducer(state = initialState, action: ClientActions.ClientActions) {
@@ -119,6 +121,29 @@ export function clientsReducer(state = initialState, action: ClientActions.Clien
         return {
           ...state,
           formErrors: []
+        };
+
+      case ClientActions.UPLOAD_IMAGE_SUCCESS:
+        return {
+          ...state,
+          clients: state.clients.map(client => {
+
+            if (client.id === action.payload.id) {
+              return action.payload;
+            } else {
+              return client;
+            }
+
+          }),
+          editMode: false,
+          selectedClient: action.payload,
+          downloadProgress: 0
+        };
+
+      case ClientActions.SET_UPLOAD_PROGRESS:
+        return {
+          ...state,
+          downloadProgress: action.payload
         };
 
     default:

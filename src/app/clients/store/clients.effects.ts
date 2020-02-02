@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as fromApp from '../../store/app.reducer';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpRequest, HttpEvent, HttpEventType } from '@angular/common/http';
 
 import * as ClientActions from './clients.actions';
 import selectors, { PageRedirectionParams } from '../../store/selectors';
@@ -49,12 +49,8 @@ export class ClientEffects {
                         (page: Page<Client>) => {
 
                           page.content.map(client => {
-
                             client.firstName = client.firstName.toUpperCase();
-                            // client.createdAt = formatDate(client.createdAt, 'EEEE dd, MMMM yyyy', 'es-MX', 'America/Chihuahua');
-
                             return client;
-
                           });
 
                           return new ClientActions.GetClientsSuccess({
@@ -177,6 +173,79 @@ export class ClientEffects {
                             }));
 
                           }
+
+                        }
+
+                      )
+
+                    );
+
+          }
+
+        )
+
+      );
+
+  @Effect()
+  uploadImage =
+    this
+      .actions$
+      .pipe(
+
+        ofType(ClientActions.UPLOAD_IMAGE_START),
+
+        switchMap(
+
+          (action: ClientActions.UploadImageStart) => {
+
+            const formData = new FormData();
+
+            formData.append('image', action.payload.image);
+            formData.append('id', action.payload.id.toString());
+
+            const customPostRequest =
+              new HttpRequest(
+                'POST',
+                `${environment.baseUrl}/clients/upload`,
+                formData,
+                { reportProgress: true }
+              );
+
+            return this
+                    .http
+                    .request<CreateClientResponseSuccess>(customPostRequest)
+                    .pipe(
+
+                      map(
+
+                        (event: HttpEvent<CreateClientResponseSuccess>) => {
+
+                          if (event.type === HttpEventType.UploadProgress) {
+                            return new ClientActions.SetUploadProgress(Math.round((event.loaded / event.total) * 100));
+                          } else if (event.type === HttpEventType.Response) {
+                            swal.fire(`The client ${event.body.client.firstName} has updated its image.`, event.body.message, 'success');
+                            return new ClientActions.UploadImageSuccess(event.body.client);
+                          } else {
+                            return {
+                              type: '[Clients] Filler Upload Image Action'
+                            };
+                          }
+
+                        }
+
+                      ),
+
+                      catchError(
+
+                        (errorResponse: HttpErrorResponse) => {
+
+                          this.location.back();
+
+                          return of(new ClientActions.ClientRequestFail({
+                            primaryErrorMessage: errorResponse.error.message,
+                            secondaryErrorMessage: errorResponse.error.error
+                          }));
+
 
                         }
 
