@@ -4,6 +4,7 @@ import { ClientsComponent } from './clients.component';
 import { ClientFormComponent } from './client-form/client-form.component';
 import { ClientsResolverService } from './services/clients-resolver.service';
 import { ClientResolverService } from './services/client-resolver.service';
+import { RegionsResolverService } from '../regions/services/regions-resolver.service';
 
 const clientRoutes: Routes = [
   {
@@ -19,13 +20,17 @@ const clientRoutes: Routes = [
   },
   {
     path: 'form',
-    component: ClientFormComponent
+    component: ClientFormComponent,
+    resolve: [
+      RegionsResolverService
+    ]
   },
   {
     path: 'form/:id',
     component: ClientFormComponent,
     resolve: [
-      ClientResolverService
+      ClientResolverService,
+      RegionsResolverService
     ]
   }
 ];

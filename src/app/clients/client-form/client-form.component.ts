@@ -6,6 +6,8 @@ import * as ClientActions from '../store/clients.actions';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import selectors from 'src/app/store/selectors';
+import { Region } from './../../shared/models/region';
 
 @Component({
   selector: 'app-client-form',
@@ -18,6 +20,8 @@ export class ClientFormComponent implements OnInit, OnDestroy {
 
   public client: Client;
 
+  public regions: Region[];
+
   public title = 'Create Client';
 
   public errors: string[] = [];
@@ -27,6 +31,8 @@ export class ClientFormComponent implements OnInit, OnDestroy {
   private clientSubscription: Subscription;
 
   private errorsSubscription: Subscription;
+
+  private regionsSubscription: Subscription;
 
   constructor(
     private store: Store<fromApp.AppState>
@@ -65,6 +71,17 @@ export class ClientFormComponent implements OnInit, OnDestroy {
         )
         .subscribe();
 
+    this.regionsSubscription =
+      this
+        .store
+        .select(selectors.getRegions)
+        .pipe(
+          tap(
+            (regions: Region[]) => this.regions = regions
+          )
+        )
+        .subscribe();
+
   }
 
   onSubmit() {
@@ -77,31 +94,38 @@ export class ClientFormComponent implements OnInit, OnDestroy {
 
   }
 
+  onCompareRegion(currentRegion: Region, clientRegion: Region): boolean {
+
+    if (!currentRegion && !clientRegion) {
+      return true;
+    }
+
+    return !clientRegion || !currentRegion ? false : clientRegion.id === currentRegion.id;
+
+  }
+
   private loadForm(): void {
 
     let firstName: string | null = null;
     let lastName: string | null = null;
     let email: string | null = null;
     let createdAt: string | null = null;
+    let region: Region | null = null;
 
     if (this.editMode) {
       firstName = this.client.firstName;
       lastName = this.client.lastName;
       email = this.client.email;
       createdAt = this.client.createdAt;
+      region = this.client.region;
     }
-
-    // this.clientForm = new FormGroup({
-    //   firstName: new FormControl(firstName, [Validators.required, Validators.minLength(4)]),
-    //   lastName: new FormControl(lastName, [Validators.required]),
-    //   email: new FormControl(email, [Validators.required, Validators.email])
-    // });
 
     this.clientForm = new FormGroup({
       firstName: new FormControl(firstName),
       lastName: new FormControl(lastName),
       email: new FormControl(email),
-      createdAt: new FormControl(createdAt)
+      createdAt: new FormControl(createdAt),
+      region: new FormControl(region)
     });
 
   }
@@ -109,6 +133,7 @@ export class ClientFormComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.clientSubscription.unsubscribe();
     this.errorsSubscription.unsubscribe();
+    this.regionsSubscription.unsubscribe();
   }
 
 }

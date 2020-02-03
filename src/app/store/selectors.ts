@@ -22,7 +22,9 @@ const selectors = {
 
   getSelectedClient: (state: fromApp.AppState) => state.clients.selectedClient,
 
-  getDownloadProgress: (state: fromApp.AppState) => state.clients.downloadProgress
+  getDownloadProgress: (state: fromApp.AppState) => state.clients.downloadProgress,
+
+  getRegions: (state: fromApp.AppState) => state.regions.regions
 
 };
 

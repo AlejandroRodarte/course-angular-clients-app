@@ -15,6 +15,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { ClientEffects } from './clients/store/clients.effects';
 import { environment } from 'src/environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RegionEffects } from './regions/store/regions.effects';
 
 registerLocaleData(localeMX, 'es-MX');
 
@@ -33,7 +34,8 @@ registerLocaleData(localeMX, 'es-MX');
       logOnly: environment.production
     }),
     EffectsModule.forRoot([
-      ClientEffects
+      ClientEffects,
+      RegionEffects
     ]),
     BrowserAnimationsModule
   ],
