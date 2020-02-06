@@ -22,7 +22,7 @@ export class ClientsDataService {
 
     return this
             .http
-            .get<Client[]>(`${environment.baseUrl}/clients`);
+            .get<Client[]>(`${environment.baseUrl}/api/clients`);
 
   }
 
@@ -30,7 +30,7 @@ export class ClientsDataService {
 
     return this
             .http
-            .get<Client>(`${environment.baseUrl}/clients/${id}`);
+            .get<Client>(`${environment.baseUrl}/api/clients/${id}`);
 
   }
 
@@ -39,7 +39,7 @@ export class ClientsDataService {
     return this
             .http.
             post<Client>(
-              `${environment.baseUrl}/clients`,
+              `${environment.baseUrl}/api/clients`,
               client,
               { headers: this.httpHeaders }
             )
@@ -58,7 +58,7 @@ export class ClientsDataService {
     return this
             .http
             .put<Client>(
-              `${environment.baseUrl}/clients/${client.id}`,
+              `${environment.baseUrl}/api/clients/${client.id}`,
               client,
               { headers: this.httpHeaders }
             );

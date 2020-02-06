@@ -4,6 +4,7 @@ import * as fromApp from '../store/app.reducer';
 import { Store } from '@ngrx/store';
 import selectors from '../store/selectors';
 import { tap } from 'rxjs/operators';
+import * as AuthActions from '../auth/store/auth.actions';
 
 @Component({
   selector: 'app-header',
@@ -13,8 +14,10 @@ import { tap } from 'rxjs/operators';
 export class HeaderComponent implements OnInit, OnDestroy {
 
   private pageSubscription: Subscription;
+  private authSubscription: Subscription;
 
   public currentPage: number;
+  public username: string;
 
   constructor(
     private store: Store<fromApp.AppState>
@@ -33,10 +36,26 @@ export class HeaderComponent implements OnInit, OnDestroy {
         )
         .subscribe();
 
+    this.authSubscription =
+      this
+        .store
+        .select(selectors.getUsername)
+        .pipe(
+          tap(
+            (username: string) => this.username = username
+          )
+        )
+        .subscribe();
+
+  }
+
+  onLogout(): void {
+    this.store.dispatch(new AuthActions.Logout());
   }
 
   ngOnDestroy() {
     this.pageSubscription.unsubscribe();
+    this.authSubscription.unsubscribe();
   }
 
 }

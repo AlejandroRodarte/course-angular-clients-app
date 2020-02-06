@@ -5,6 +5,7 @@ import { ClientFormComponent } from './client-form/client-form.component';
 import { ClientsResolverService } from './services/clients-resolver.service';
 import { ClientResolverService } from './services/client-resolver.service';
 import { RegionsResolverService } from '../regions/services/regions-resolver.service';
+import { AdminGuardService } from '../auth/services/admin.guard';
 
 const clientRoutes: Routes = [
   {
@@ -23,6 +24,9 @@ const clientRoutes: Routes = [
     component: ClientFormComponent,
     resolve: [
       RegionsResolverService
+    ],
+    canActivate: [
+      AdminGuardService
     ]
   },
   {
@@ -31,6 +35,9 @@ const clientRoutes: Routes = [
     resolve: [
       ClientResolverService,
       RegionsResolverService
+    ],
+    canActivate: [
+      AdminGuardService
     ]
   }
 ];

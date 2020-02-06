@@ -14,7 +14,7 @@ import swal from 'sweetalert2';
 import { Router } from '@angular/router';
 import { CreateClientResponseSuccess, DeleteClientResponseSuccess, Page } from './../../shared/payloads/responses';
 import { Store } from '@ngrx/store';
-import { Location, formatDate } from '@angular/common';
+import { Location } from '@angular/common';
 
 @Injectable()
 export class ClientEffects {
@@ -41,7 +41,7 @@ export class ClientEffects {
 
             return this
                     .http
-                    .get<Page<Client>>(`${environment.baseUrl}/clients/page/${action.payload}`)
+                    .get<Page<Client>>(`${environment.baseUrl}/api/clients/page/${action.payload}`)
                     .pipe(
 
                       map(
@@ -96,7 +96,7 @@ export class ClientEffects {
 
             return this
                     .http
-                    .get<Client>(`${environment.baseUrl}/clients/${action.payload}`)
+                    .get<Client>(`${environment.baseUrl}/api/clients/${action.payload}`)
                     .pipe(
 
                       map(
@@ -105,6 +105,16 @@ export class ClientEffects {
 
                       catchError(
                         (errorResponse: HttpErrorResponse) => {
+
+                          if (errorResponse.status === 401) {
+                            this.router.navigate(['/auth']);
+                            return of({
+                              type: '[Auth] Auth Redirection'
+                            });
+                          } else if (errorResponse.status === 403) {
+                            this.router.navigate(['/clients/page', 0]);
+                            swal.fire('Forbidden', 'You are not allowed to access this resource');
+                          }
 
                           this.router.navigate(['/clients/page', 0]);
 
@@ -140,7 +150,7 @@ export class ClientEffects {
 
             return this
                     .http
-                    .post<CreateClientResponseSuccess>(`${environment.baseUrl}/clients`, action.payload)
+                    .post<CreateClientResponseSuccess>(`${environment.baseUrl}/api/clients`, action.payload)
                     .pipe(
 
                       map(
@@ -163,6 +173,17 @@ export class ClientEffects {
 
                           if (errorResponse.status === 400) {
                             return of(new ClientActions.SetFormErrorMessages(errorResponse.error.errors));
+                          } else if (errorResponse.status === 401) {
+                            this.router.navigate(['/auth']);
+                            return of({
+                              type: '[Auth] Auth Redirection'
+                            });
+                          } else if (errorResponse.status === 403) {
+                            this.location.back();
+                            swal.fire('Forbidden', 'You are not allowed to perform this operation');
+                            return of({
+                              type: '[Auth] Auth Redirection'
+                            });
                           } else {
 
                             this.location.back();
@@ -206,7 +227,7 @@ export class ClientEffects {
             const customPostRequest =
               new HttpRequest(
                 'POST',
-                `${environment.baseUrl}/clients/upload`,
+                `${environment.baseUrl}/api/clients/upload`,
                 formData,
                 { reportProgress: true }
               );
@@ -238,6 +259,18 @@ export class ClientEffects {
                       catchError(
 
                         (errorResponse: HttpErrorResponse) => {
+
+                          if (errorResponse.status === 401) {
+                            this.router.navigate(['/auth']);
+                            return of({
+                              type: '[Auth] Auth Redirection'
+                            });
+                          } else if (errorResponse.status === 403) {
+                            swal.fire('Forbidden', 'You are not allowed to perform this operation');
+                            return of({
+                              type: '[Auth] Auth Redirection'
+                            });
+                          }
 
                           this.location.back();
 
@@ -273,7 +306,7 @@ export class ClientEffects {
 
             return this
                     .http
-                    .put<CreateClientResponseSuccess>(`${environment.baseUrl}/clients/${action.payload.id}`, action.payload)
+                    .put<CreateClientResponseSuccess>(`${environment.baseUrl}/api/clients/${action.payload.id}`, action.payload)
                     .pipe(
 
                       map(
@@ -294,6 +327,16 @@ export class ClientEffects {
 
                           if (errorResponse.status === 400) {
                             return of(new ClientActions.SetFormErrorMessages(errorResponse.error.errors));
+                          } else if (errorResponse.status === 401) {
+                            this.router.navigate(['/auth']);
+                            return of({
+                              type: '[Auth] Auth Redirection'
+                            });
+                          } else if (errorResponse.status === 403) {
+                            swal.fire('Forbidden', 'You are not allowed to perform this operation');
+                            return of({
+                              type: '[Auth] Auth Redirection'
+                            });
                           } else {
 
                             this.location.back();
@@ -332,7 +375,7 @@ export class ClientEffects {
 
           return this
                   .http
-                  .delete<DeleteClientResponseSuccess>(`${environment.baseUrl}/clients/${action.payload}`)
+                  .delete<DeleteClientResponseSuccess>(`${environment.baseUrl}/api/clients/${action.payload}`)
                   .pipe(
 
                     tap(
@@ -349,10 +392,26 @@ export class ClientEffects {
                     ),
 
                     catchError(
-                      (errorResponse: HttpErrorResponse) => of(new ClientActions.ClientRequestFail({
-                        primaryErrorMessage: 'Error deleting the client',
-                        secondaryErrorMessage: errorResponse.error.message
-                      }))
+                      (errorResponse: HttpErrorResponse) => {
+
+                        if (errorResponse.status === 401) {
+                          this.router.navigate(['/auth']);
+                          return of({
+                            type: '[Auth] Auth Redirection'
+                          });
+                        } else if (errorResponse.status === 403) {
+                          swal.fire('Forbidden', 'You are not allowed to perform this operation');
+                          return of({
+                            type: '[Auth] Auth Redirection'
+                          });
+                        }
+
+                        return of(new ClientActions.ClientRequestFail({
+                          primaryErrorMessage: 'Error deleting the client',
+                          secondaryErrorMessage: errorResponse.error.message
+                        }));
+
+                      }
                     )
 
                   );

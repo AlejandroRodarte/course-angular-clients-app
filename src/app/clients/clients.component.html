@@ -20,6 +20,7 @@
         type="button"
         [routerLink]="['/clients/form']"
         (click)="onCreateClient()"
+        *ngIf="hasRole('ROLE_ADMIN')"
       >
         Create Client
       </button>
@@ -42,7 +43,7 @@
 
         <tr>
 
-          <th>
+          <th *ngIf="hasRole('ROLE_USER')">
             image
           </th>
 
@@ -62,11 +63,11 @@
             date
           </th>
 
-          <th>
+          <th *ngIf="hasRole('ROLE_ADMIN')">
             edit
           </th>
 
-          <th>
+          <th *ngIf="hasRole('ROLE_ADMIN')">
             delete
           </th>
 
@@ -78,7 +79,7 @@
 
         <tr *ngFor="let client of clients">
 
-          <td>
+          <td *ngIf="hasRole('ROLE_USER')">
 
             <img
               *ngIf="client.image"
@@ -116,7 +117,7 @@
             {{ client.createdAt | date:"EEEE dd, MMMM yyyy" }}
           </td>
 
-          <td>
+          <td *ngIf="hasRole('ROLE_ADMIN')">
 
             <button
               type="button"
@@ -129,7 +130,7 @@
 
           </td>
 
-          <td>
+          <td *ngIf="hasRole('ROLE_ADMIN')">
 
             <button
               type="button"

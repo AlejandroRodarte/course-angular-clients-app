@@ -69,7 +69,10 @@
 
                 </ul>
 
-                <div class="input-group">
+                <div
+                  class="input-group"
+                  *ngIf="hasRole('ROLE_ADMIN')"
+                >
 
                   <div class="custom-file">
 
@@ -133,6 +136,15 @@
                   [src]="'http://localhost:8080/api/clients/image/' + selectedClient.image"
                   alt="No image for this user"
                   class="img-thumbnail rounded"
+                  style="width: 350px;"
+                >
+
+                <img
+                  *ngIf="!selectedClient.image"
+                  src="http://localhost:8080/images/no-user.png"
+                  alt="No image for this user"
+                  class="img-thumbnail rounded"
+                  style="width: 350px;"
                 >
 
               </div>

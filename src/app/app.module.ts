@@ -16,6 +16,8 @@ import { ClientEffects } from './clients/store/clients.effects';
 import { environment } from 'src/environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RegionEffects } from './regions/store/regions.effects';
+import { AuthEffects } from './auth/store/auth.effects';
+import { CoreModule } from './core.module';
 
 registerLocaleData(localeMX, 'es-MX');
 
@@ -29,13 +31,15 @@ registerLocaleData(localeMX, 'es-MX');
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    CoreModule,
     StoreModule.forRoot(appReducer),
     StoreDevtoolsModule.instrument({
       logOnly: environment.production
     }),
     EffectsModule.forRoot([
       ClientEffects,
-      RegionEffects
+      RegionEffects,
+      AuthEffects
     ]),
     BrowserAnimationsModule
   ],

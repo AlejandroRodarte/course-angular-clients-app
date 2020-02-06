@@ -1,4 +1,5 @@
 import * as fromApp from './app.reducer';
+import { Role } from '../shared/models/role';
 
 export interface PageRedirectionParams {
   wouldPageChangeOnAdd: boolean;
@@ -24,7 +25,20 @@ const selectors = {
 
   getDownloadProgress: (state: fromApp.AppState) => state.clients.downloadProgress,
 
-  getRegions: (state: fromApp.AppState) => state.regions.regions
+  getRegions: (state: fromApp.AppState) => state.regions.regions,
+
+  isAuthenticated: (state: fromApp.AppState) => state.auth.accessToken && state.auth.user ? true : false,
+
+  getUsername: (state: fromApp.AppState) => state.auth.user ? state.auth.user.username : null,
+
+  getAccessToken: (state: fromApp.AppState) => state.auth.accessToken,
+
+  getRefreshToken: (state: fromApp.AppState) => state.auth.refreshToken,
+
+  getRoles: (state: fromApp.AppState) => state.auth.user ? state.auth.user.roles.map((role: Role) => role.name) : null,
+
+  isAdmin: (state: fromApp.AppState) => state.auth.user ?
+  state.auth.user.roles.map((role: Role) => role.name).includes('ROLE_ADMIN') : false
 
 };
 

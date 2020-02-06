@@ -1,0 +1,57 @@
+<div class="card border-primary">
+
+  <div class="card-header">
+    {{ title }}
+  </div>
+
+  <div class="card-body">
+
+    <form
+      [formGroup]="loginForm"
+      (ngSubmit)="onSubmit()"
+    >
+
+      <div class="form-group col-sm-6">
+
+        <input
+          type="text"
+          class="form-control"
+          name="username"
+          id="username"
+          formControlName="username"
+          placeholder="Username"
+          autofocus
+        >
+
+      </div>
+
+      <div class="form-group col-sm-6">
+
+        <input
+          type="password"
+          class="form-control"
+          name="password"
+          id="password"
+          formControlName="password"
+          placeholder="Password"
+        >
+
+      </div>
+
+      <div class="form-group col-sm-6">
+
+        <button
+          type="submit"
+          class="btn btn-primary btn-block"
+          [disabled]="!loginForm.valid"
+        >
+          Login
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>

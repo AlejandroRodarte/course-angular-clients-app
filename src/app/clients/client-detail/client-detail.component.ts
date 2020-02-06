@@ -22,8 +22,11 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
   public selectedClient: Client;
 
   private downloadProgressSubscription: Subscription;
+  private rolesSubscription: Subscription;
 
   public downloadProgress: number;
+
+  public roles: string[];
 
   private image: File;
 
@@ -42,6 +45,17 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
         .pipe(
           tap(
             (downloadProgress: number) => this.downloadProgress = downloadProgress
+          )
+        )
+        .subscribe();
+
+    this.rolesSubscription =
+      this
+        .store
+        .select(selectors.getRoles)
+        .pipe(
+          tap(
+            (roles: string[]) => this.roles = roles
           )
         )
         .subscribe();
@@ -78,6 +92,16 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
     this.image = null;
     this.isTypeCorrect = false;
     this.store.dispatch(new ClientActions.ClearClient());
+  }
+
+  hasRole(role: string): boolean {
+
+    if (!this.roles) {
+      return false;
+    }
+
+    return this.roles.includes(role);
+
   }
 
   ngOnDestroy() {

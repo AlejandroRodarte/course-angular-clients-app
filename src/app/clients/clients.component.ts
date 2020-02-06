@@ -20,9 +20,12 @@ export class ClientsComponent implements OnInit, OnDestroy {
 
   public selectedClient: Client;
 
+  public roles: string[];
+
   private clientsSubscription: Subscription;
   private clientSubscription: Subscription;
   private errorSubscription: Subscription;
+  private rolesSubscription: Subscription;
 
   constructor(
     private store: Store<fromApp.AppState>
@@ -79,6 +82,17 @@ export class ClientsComponent implements OnInit, OnDestroy {
         )
         .subscribe();
 
+    this.rolesSubscription =
+      this
+        .store
+        .select(selectors.getRoles)
+        .pipe(
+          tap(
+            (roles: string[]) => this.roles = roles
+          )
+        )
+        .subscribe();
+
   }
 
   async onDelete(client: Client) {
@@ -109,10 +123,21 @@ export class ClientsComponent implements OnInit, OnDestroy {
     this.store.dispatch(new ClientActions.SelectClient(id));
   }
 
+  hasRole(role: string): boolean {
+
+    if (!this.roles) {
+      return false;
+    }
+
+    return this.roles.includes(role);
+
+  }
+
   ngOnDestroy() {
     this.clientsSubscription.unsubscribe();
     this.clientSubscription.unsubscribe();
     this.errorSubscription.unsubscribe();
+    this.rolesSubscription.unsubscribe();
   }
 
 }
