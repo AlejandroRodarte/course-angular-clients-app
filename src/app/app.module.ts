@@ -18,6 +18,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RegionEffects } from './regions/store/regions.effects';
 import { AuthEffects } from './auth/store/auth.effects';
 import { CoreModule } from './core.module';
+import { CookieService } from 'ngx-cookie-service';
 
 registerLocaleData(localeMX, 'es-MX');
 
@@ -47,7 +48,8 @@ registerLocaleData(localeMX, 'es-MX');
     {
       provide: LOCALE_ID,
       useValue: 'es-MX'
-    }
+    },
+    CookieService
   ],
   bootstrap: [AppComponent]
 })

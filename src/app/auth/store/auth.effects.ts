@@ -13,6 +13,7 @@ import { of } from 'rxjs';
 import { Store } from '@ngrx/store';
 import selectors from 'src/app/store/selectors';
 import { AuthService } from '../services/auth.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable()
 export class AuthEffects {
@@ -22,7 +23,8 @@ export class AuthEffects {
     private http: HttpClient,
     private router: Router,
     private store: Store<fromApp.AppState>,
-    private authService: AuthService
+    private authService: AuthService,
+    private cookieService: CookieService
   ) { }
 
   @Effect()
@@ -69,7 +71,7 @@ export class AuthEffects {
                       catchError(
                         (errorResponse: HttpErrorResponse) => {
                           swal.fire('Login Failure', 'Bad credentials', 'error');
-                          localStorage.removeItem('userData');
+                          this.cookieService.delete('userData', '/');
                           return of(new AuthActions.AuthenticateFail());
                         }
                       )
@@ -103,7 +105,15 @@ export class AuthEffects {
               user: action.payload.user
             };
 
-            localStorage.setItem('userData', JSON.stringify(userData));
+            this.cookieService.set(
+              'userData',
+              JSON.stringify(userData),
+              new Date(userData.refreshTokenExpirationDate),
+              '/',
+              'localhost',
+              false,
+              'Strict'
+            );
 
             if (action.payload.redirect) {
               this.router.navigate(['/clients/page', 0]);
@@ -129,7 +139,7 @@ export class AuthEffects {
 
         tap(
           (action: AuthActions.Logout) => {
-            localStorage.removeItem('userData');
+            this.cookieService.delete('userData', '/');
             this.authService.clearTimer();
             this.router.navigate(['/auth']);
             swal.fire('Logout', 'You have closed your session', 'success');
@@ -150,12 +160,14 @@ export class AuthEffects {
 
           (action: AuthActions.Logout) => {
 
-            const userData: UserData = JSON.parse(localStorage.getItem('userData'));
+            const cookie = this.cookieService.get('userData');
 
-            if (!userData) {
+            if (!cookie) {
               this.router.navigate(['/auth']);
               return new AuthActions.AuthenticateFail();
             }
+
+            const userData: UserData = JSON.parse(this.cookieService.get('userData'));
 
             const accessTokenExpirationTime = userData.expirationDate - new Date().getTime();
             const accessTokenExpired = accessTokenExpirationTime < 0;
@@ -242,7 +254,7 @@ export class AuthEffects {
                       catchError(
                         (errorResponse: HttpErrorResponse) => {
                           swal.fire('Login Failure', 'Bad credentials', 'error');
-                          localStorage.removeItem('userData');
+                          this.cookieService.delete('userData', '/');
                           return of(new AuthActions.AuthenticateFail());
                         }
                       )
