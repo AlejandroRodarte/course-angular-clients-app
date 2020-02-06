@@ -5,7 +5,7 @@ import { ClientFormComponent } from './client-form/client-form.component';
 import { ClientsResolverService } from './services/clients-resolver.service';
 import { ClientResolverService } from './services/client-resolver.service';
 import { RegionsResolverService } from '../regions/services/regions-resolver.service';
-import { AdminGuardService } from '../auth/services/admin.guard';
+import { RoleGuardService } from '../auth/services/role.guard';
 
 const clientRoutes: Routes = [
   {
@@ -26,8 +26,11 @@ const clientRoutes: Routes = [
       RegionsResolverService
     ],
     canActivate: [
-      AdminGuardService
-    ]
+      RoleGuardService
+    ],
+    data: {
+      role: 'ROLE_ADMIN'
+    }
   },
   {
     path: 'form/:id',
@@ -37,8 +40,11 @@ const clientRoutes: Routes = [
       RegionsResolverService
     ],
     canActivate: [
-      AdminGuardService
-    ]
+      RoleGuardService
+    ],
+    data: {
+      role: 'ROLE_ADMIN'
+    }
   }
 ];
 

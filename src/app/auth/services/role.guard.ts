@@ -4,14 +4,14 @@ import { Observable } from 'rxjs';
 import * as fromApp from '../../store/app.reducer';
 import { Store } from '@ngrx/store';
 import { map, take, skipWhile } from 'rxjs/operators';
-import { Actions } from '@ngrx/effects';
 import * as fromAuth from '../store/auth.reducer';
-import { Role } from './../../shared/models/role';
+import { Role } from '../../shared/models/role';
+import swal from 'sweetalert2';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AdminGuardService implements CanActivate {
+export class RoleGuardService implements CanActivate {
 
   constructor(
     private store: Store<fromApp.AppState>,
@@ -36,9 +36,10 @@ export class AdminGuardService implements CanActivate {
 
                 (authState: fromAuth.AuthReducerState) => {
 
-                  if (authState.user && authState.user.roles.map((role: Role) => role.name).includes('ROLE_ADMIN')) {
+                  if (authState.user && authState.user.roles.map((role: Role) => role.name).includes(route.data.role)) {
                     return true;
                   } else {
+                    swal.fire('Unauthorized', 'You can not access this resource', 'error');
                     return this.router.createUrlTree(['/auth']);
                   }
 
