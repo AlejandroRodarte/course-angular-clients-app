@@ -106,6 +106,7 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.downloadProgressSubscription.unsubscribe();
+    this.rolesSubscription.unsubscribe();
   }
 
 }
