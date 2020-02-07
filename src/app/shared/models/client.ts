@@ -1,4 +1,5 @@
 import { Region } from './region';
+import { Bill } from './bill';
 
 export class Client {
 
@@ -10,6 +11,7 @@ export class Client {
     public id?: number,
     public createdAt?: string,
     public image?: string,
+    public bills?: Bill[]
   ) { }
 
 }

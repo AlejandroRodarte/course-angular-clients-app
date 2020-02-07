@@ -120,7 +120,7 @@ export class ClientsComponent implements OnInit, OnDestroy {
   }
 
   onSelectClient(id: number) {
-    this.store.dispatch(new ClientActions.SelectClient(id));
+    this.store.dispatch(new ClientActions.GetClientStart(id));
   }
 
   hasRole(role: string): boolean {

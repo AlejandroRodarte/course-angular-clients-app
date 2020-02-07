@@ -151,6 +151,68 @@
 
             </div>
 
+            <div class="row">
+
+              <div
+                class="alert alert-info my-4"
+                *ngIf="selectedClient.bills.length === 0"
+              >
+                There are no bills to display for {{ selectedClient.firstName }}
+              </div>
+
+              <table
+                class="table table-bordered table-stripped my-4"
+                *ngIf="selectedClient.bills.length > 0"
+              >
+
+                <thead>
+
+                  <tr>
+
+                    <th>
+                      Foil Number
+                    </th>
+
+                    <th>
+                      Description
+                    </th>
+
+                    <th>
+                      Date
+                    </th>
+
+                    <th>
+                      Total
+                    </th>
+
+                  </tr>
+
+                </thead>
+
+                <tbody *ngFor="let bill of selectedClient.bills">
+
+                  <td>
+                    {{ bill.id }}
+                  </td>
+
+                  <td>
+                    {{ bill.description }}
+                  </td>
+
+                  <td>
+                    {{ bill.createdAt }}
+                  </td>
+
+                  <td>
+                    {{ bill.total }}
+                  </td>
+
+                </tbody>
+
+              </table>
+
+            </div>
+
           </div>
 
         </div>
