@@ -21,15 +21,122 @@
         Client data
       </li>
 
-      <li class="list-group-item list-group-item-primary">
-        Test
+      <li class="list-group-item">
+        {{ selectedBill.client.firstName }}
       </li>
 
-      <li class="list-group-item list-group-item-primary">
-        Client data
+      <li class="list-group-item">
+        {{ selectedBill.client.lastName }}
       </li>
 
     </ul>
+
+    <ul class="list-group my-2">
+
+      <li class="list-group-item list-group-item-primary">
+        Bill data
+      </li>
+
+      <li class="list-group-item">
+        Foil number: {{ selectedBill.id }}
+      </li>
+
+      <li class="list-group-item">
+        Description: {{ selectedBill.description }}
+      </li>
+
+      <li class="list-group-item">
+        Created: {{ selectedBill.createdAt }}
+      </li>
+
+    </ul>
+
+    <table class="table table-striped table-hover table-bordered my-3">
+
+      <thead>
+
+        <tr>
+
+          <th>
+            Product
+          </th>
+
+          <th>
+            Price
+          </th>
+
+          <th>
+            Quantity
+          </th>
+
+          <th>
+            Import
+          </th>
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let billItem of selectedBill.billItems">
+
+          <td>
+            {{ billItem.product.name }}
+          </td>
+
+          <td>
+            {{ billItem.product.price }}
+          </td>
+
+          <td>
+            {{ billItem.quantity }}
+          </td>
+
+          <td>
+            {{ billItem.price }}
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+    <h5 class="float-right">
+
+      <span>
+        Total:
+      </span>
+
+      <span class="badge badge-secondary">
+        {{ selectedBill.total }}
+      </span>
+
+    </h5>
+
+    <div
+      class="card border-info mb-4"
+      style="max-width: 250px;"
+    >
+
+      <div class="card card-header">
+        Comments
+      </div>
+
+      <div class="card card-body">
+
+        <p *ngIf="!selectedBill.comment">
+          No comments
+        </p>
+
+        <p *ngIf="selectedBill.comment">
+          {{ selectedBill.comment }}
+        </p>
+
+      </div>
+
+    </div>
 
   </div>
 
