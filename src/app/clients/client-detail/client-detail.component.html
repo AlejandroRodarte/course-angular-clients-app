@@ -185,6 +185,10 @@
                       Total
                     </th>
 
+                    <th>
+                      View more
+                    </th>
+
                   </tr>
 
                 </thead>
@@ -205,6 +209,16 @@
 
                   <td>
                     {{ bill.total }}
+                  </td>
+
+                  <td>
+                    <button
+                      class="btn btn-primary btn-sm"
+                      type="button"
+                      [routerLink]="['/bills', bill.id]"
+                    >
+                      Details
+                    </button>
                   </td>
 
                 </tbody>

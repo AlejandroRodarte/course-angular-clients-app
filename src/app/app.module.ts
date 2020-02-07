@@ -17,6 +17,7 @@ import { environment } from 'src/environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RegionEffects } from './regions/store/regions.effects';
 import { AuthEffects } from './auth/store/auth.effects';
+import { BillsEffects } from './bills/store/bills.effects';
 import { CoreModule } from './core.module';
 import { CookieService } from 'ngx-cookie-service';
 
@@ -40,7 +41,8 @@ registerLocaleData(localeMX, 'es-MX');
     EffectsModule.forRoot([
       ClientEffects,
       RegionEffects,
-      AuthEffects
+      AuthEffects,
+      BillsEffects
     ]),
     BrowserAnimationsModule
   ],
