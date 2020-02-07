@@ -1,8 +1,8 @@
-import { Region } from 'src/app/shared/models/region';
+import { RegionDto } from 'src/app/shared/models/region';
 import * as RegionActions from './regions.actions';
 
 export interface RegionsReducerState {
-  regions: Region[];
+  regions: RegionDto[];
 }
 
 const initialState: RegionsReducerState = {

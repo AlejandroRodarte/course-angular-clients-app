@@ -1,11 +1,11 @@
-import { Product } from './product';
+import { ProductDto } from './product';
 
-export class BillItem {
+export class BillItemDto {
 
   constructor(
     public id: number,
     public quantity: number,
-    public product: Product,
+    public product: ProductDto,
     public price: number
   ) { }
 

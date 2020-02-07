@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import selectors from 'src/app/store/selectors';
 import { tap } from 'rxjs/operators';
-import { Client } from 'src/app/shared/models/client';
+import { ClientDto } from 'src/app/shared/models/client';
 
 import swal from 'sweetalert2';
 
@@ -19,7 +19,7 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
   public title = 'Client Details';
 
   @Input()
-  public selectedClient: Client;
+  public selectedClient: ClientDto;
 
   private downloadProgressSubscription: Subscription;
   private rolesSubscription: Subscription;
@@ -65,9 +65,12 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
   onImageUpload({ target }: { target: HTMLInputElement }) {
 
     if (target.files[0].type.indexOf('image') === -1) {
+
       swal.fire('Invalid file', 'Please upload an image', 'error');
       this.isTypeCorrect = false;
+
       return;
+
     }
 
     this.image = target.files[0];
@@ -78,10 +81,12 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
   onSubmit() {
 
     if (this.image) {
+
       this.store.dispatch(new ClientActions.UploadImageStart({
         image: this.image,
         id: this.selectedClient.id
       }));
+
     } else {
       swal.fire('Invalid upload', 'Please select an image before sending', 'error');
     }
@@ -89,9 +94,12 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
   }
 
   onClose() {
+
     this.image = null;
     this.isTypeCorrect = false;
+
     this.store.dispatch(new ClientActions.ClearClient());
+
   }
 
   hasRole(role: string): boolean {

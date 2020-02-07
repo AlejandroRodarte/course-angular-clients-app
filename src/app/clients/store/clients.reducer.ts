@@ -1,11 +1,10 @@
-import { Client } from 'src/app/shared/models/client';
-
 import * as ClientActions from './clients.actions';
 import { PaginationParams } from 'src/app/shared/payloads/pagination';
+import { RawClientDto, ClientDto } from 'src/app/shared/models/client';
 
 export interface ClientsReducerState {
-  clients: Client[];
-  selectedClient: Client;
+  clients: RawClientDto[];
+  selectedClient: ClientDto;
   editMode: boolean;
   primaryErrorMessage: string;
   secondaryErrorMessage: string;
@@ -52,14 +51,6 @@ export function clientsReducer(state = initialState, action: ClientActions.Clien
         editMode: true
       };
 
-    case ClientActions.SELECT_CLIENT:
-      return {
-        ...state,
-        selectedClient: state.clients.find(client => client.id === action.payload),
-        editMode: true,
-        formErrors: []
-      };
-
     case ClientActions.CLEAR_CLIENT:
       return {
         ...state,
@@ -77,7 +68,7 @@ export function clientsReducer(state = initialState, action: ClientActions.Clien
     case ClientActions.UPDATE_CLIENT_SUCCESS:
       return {
         ...state,
-        clients: state.clients.map((client: Client) => {
+        clients: state.clients.map((client: RawClientDto) => {
 
           if (client.id === action.payload.id) {
             return action.payload;
@@ -94,7 +85,7 @@ export function clientsReducer(state = initialState, action: ClientActions.Clien
       case ClientActions.DELETE_CLIENT_SUCCESS:
         return {
           ...state,
-          clients: state.clients.filter((client: Client) => client.id !== action.payload)
+          clients: state.clients.filter((client: RawClientDto) => client.id !== action.payload)
         };
 
       case ClientActions.CLIENT_REQUEST_FAIL:
@@ -124,6 +115,7 @@ export function clientsReducer(state = initialState, action: ClientActions.Clien
         };
 
       case ClientActions.UPLOAD_IMAGE_SUCCESS:
+
         return {
           ...state,
           clients: state.clients.map(client => {
@@ -136,7 +128,10 @@ export function clientsReducer(state = initialState, action: ClientActions.Clien
 
           }),
           editMode: false,
-          selectedClient: action.payload,
+          selectedClient: {
+            ...state.selectedClient,
+            image: action.payload.image
+          },
           downloadProgress: 0
         };
 

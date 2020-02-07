@@ -1,6 +1,7 @@
 import { Action } from '@ngrx/store';
-import { Client } from 'src/app/shared/models/client';
 import { PaginationParams } from 'src/app/shared/payloads/pagination';
+import { RawClientDto, ClientDto } from 'src/app/shared/models/client';
+import { CreateClientRequest, UpdateClientRequest } from 'src/app/shared/payloads/requests';
 
 export const GET_CLIENTS_START = '[Clients] Get Clients Start';
 export const GET_CLIENTS_SUCCESS = '[Clients] Get Clients Success';
@@ -8,7 +9,6 @@ export const GET_CLIENTS_SUCCESS = '[Clients] Get Clients Success';
 export const GET_CLIENT_START = '[Clients] Get Client Start';
 export const GET_CLIENT_SUCCESS = '[Clients] Get Client Success';
 
-export const SELECT_CLIENT = '[Clients] Select Client';
 export const CLEAR_CLIENT = '[Clients] Clear Client';
 
 export const ADD_CLIENT_START = '[Clients] Add Client Start';
@@ -36,7 +36,6 @@ GetClientsStart |
 GetClientsSuccess |
 GetClientStart |
 GetClientSuccess |
-SelectClient |
 ClearClient |
 AddClientStart |
 AddClientSuccess |
@@ -68,7 +67,7 @@ export class GetClientsSuccess implements Action {
 
   constructor(
     public payload: {
-      clients: Client[],
+      clients: RawClientDto[],
       paginationParams: PaginationParams
     }
   ) { }
@@ -90,17 +89,7 @@ export class GetClientSuccess implements Action {
   readonly type = GET_CLIENT_SUCCESS;
 
   constructor(
-    public payload: Client
-  ) { }
-
-}
-
-export class SelectClient implements Action {
-
-  readonly type = SELECT_CLIENT;
-
-  constructor(
-    public payload: number
+    public payload: ClientDto
   ) { }
 
 }
@@ -114,7 +103,7 @@ export class AddClientStart implements Action {
   readonly type = ADD_CLIENT_START;
 
   constructor(
-    public payload: Client
+    public payload: CreateClientRequest
   ) { }
 
 }
@@ -124,7 +113,7 @@ export class AddClientSuccess implements Action {
   readonly type = ADD_CLIENT_SUCCESS;
 
   constructor(
-    public payload: Client
+    public payload: RawClientDto
   ) { }
 
 }
@@ -134,7 +123,7 @@ export class UpdateClientStart implements Action {
   readonly type = UPDATE_CLIENT_START;
 
   constructor(
-    public payload: Client
+    public payload: UpdateClientRequest
   ) { }
 
 }
@@ -144,7 +133,7 @@ export class UpdateClientSuccess implements Action {
   readonly type = UPDATE_CLIENT_SUCCESS;
 
   constructor(
-    public payload: Client
+    public payload: RawClientDto
   ) { }
 
 }
@@ -218,7 +207,7 @@ export class UploadImageSuccess implements Action {
   readonly type = UPLOAD_IMAGE_SUCCESS;
 
   constructor(
-    public payload: Client
+    public payload: RawClientDto
   ) { }
 
 }

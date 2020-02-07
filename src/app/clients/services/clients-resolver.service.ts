@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Client } from 'src/app/shared/models/client';
+import { RawClientDto } from 'src/app/shared/models/client';
 import { Observable, of } from 'rxjs';
 import * as fromApp from '../../store/app.reducer';
 import * as ClientActions from '../store/clients.actions';
@@ -11,14 +11,14 @@ import { take, switchMap, map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-export class ClientsResolverService implements Resolve<Client[]> {
+export class ClientsResolverService implements Resolve<RawClientDto[]> {
 
   constructor(
     private store: Store<fromApp.AppState>,
     private actions$: Actions
   ) { }
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Client[] | Observable<Client[]> | Promise<Client[]> {
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): RawClientDto[] | Observable<RawClientDto[]> | Promise<RawClientDto[]> {
 
     return this
             .getClients()
@@ -28,7 +28,7 @@ export class ClientsResolverService implements Resolve<Client[]> {
 
               switchMap(
 
-                (clients: Client[]) => {
+                (clients: RawClientDto[]) => {
 
                   const page = +route.params.page;
 

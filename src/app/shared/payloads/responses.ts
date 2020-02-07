@@ -1,18 +1,17 @@
 
-import { Client } from './../models/client';
 import { Pageable, Sort } from './pagination';
 import { User } from '../models/user';
 
-export interface CreateClientResponseSuccess {
+export interface CreateResponseSuccess<T> {
   message: string;
-  client: Client;
+  client: T;
 }
 
-export interface DeleteClientResponseSuccess {
+export interface DeleteResponseSuccess {
   message: string;
 }
 
-export interface ClientNotFoundError {
+export interface NotFoundError {
   message: string;
 }
 

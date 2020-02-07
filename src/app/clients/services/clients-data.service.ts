@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Client } from 'src/app/shared/models/client';
+import { RawClientDto } from 'src/app/shared/models/client';
 import { environment } from './../../../environments/environment';
 import { tap } from 'rxjs/operators';
 
@@ -18,34 +18,34 @@ export class ClientsDataService {
     private http: HttpClient
   ) { }
 
-  getClients(): Observable<Client[]> {
+  getClients(): Observable<RawClientDto[]> {
 
     return this
             .http
-            .get<Client[]>(`${environment.baseUrl}/api/clients`);
+            .get<RawClientDto[]>(`${environment.baseUrl}/api/clients`);
 
   }
 
-  getClient(id: number): Observable<Client> {
+  getClient(id: number): Observable<RawClientDto> {
 
     return this
             .http
-            .get<Client>(`${environment.baseUrl}/api/clients/${id}`);
+            .get<RawClientDto>(`${environment.baseUrl}/api/clients/${id}`);
 
   }
 
-  createClient(client: Client): Observable<Client> {
+  createClient(client: RawClientDto): Observable<RawClientDto> {
 
     return this
             .http.
-            post<Client>(
+            post<RawClientDto>(
               `${environment.baseUrl}/api/clients`,
               client,
               { headers: this.httpHeaders }
             )
             .pipe(
               tap(
-                (newClient: Client) => {
+                (newClient: RawClientDto) => {
                   newClient.createdAt = newClient.createdAt.substring(0, 10);
                 }
               )
@@ -53,11 +53,11 @@ export class ClientsDataService {
 
   }
 
-  updateClient(client: Client): Observable<Client> {
+  updateClient(client: RawClientDto): Observable<RawClientDto> {
 
     return this
             .http
-            .put<Client>(
+            .put<RawClientDto>(
               `${environment.baseUrl}/api/clients/${client.id}`,
               client,
               { headers: this.httpHeaders }

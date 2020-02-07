@@ -1,4 +1,4 @@
-export class Region {
+export class RegionDto {
 
   constructor(
     public id: number,

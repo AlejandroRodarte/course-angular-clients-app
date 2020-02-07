@@ -1,13 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Client } from '../../shared/models/client';
+import { FormGroup, FormControl } from '@angular/forms';
+import { ClientDto } from '../../shared/models/client';
 import * as fromApp from '../../store/app.reducer';
 import * as ClientActions from '../store/clients.actions';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import selectors from 'src/app/store/selectors';
-import { Region } from './../../shared/models/region';
+import { RegionDto } from './../../shared/models/region';
 
 @Component({
   selector: 'app-client-form',
@@ -18,9 +18,9 @@ export class ClientFormComponent implements OnInit, OnDestroy {
 
   public clientForm: FormGroup;
 
-  public client: Client;
+  public client: ClientDto;
 
-  public regions: Region[];
+  public regions: RegionDto[];
 
   public title = 'Create Client';
 
@@ -49,10 +49,13 @@ export class ClientFormComponent implements OnInit, OnDestroy {
         }))
         .pipe(
           tap(
-            ({ client, editMode }: { client: Client, editMode: boolean }) => {
+            ({ client, editMode }: { client: ClientDto, editMode: boolean }) => {
+
               this.client = client;
               this.editMode = editMode;
+
               this.loadForm();
+
             }
           )
         )
@@ -77,7 +80,7 @@ export class ClientFormComponent implements OnInit, OnDestroy {
         .select(selectors.getRegions)
         .pipe(
           tap(
-            (regions: Region[]) => this.regions = regions
+            (regions: RegionDto[]) => this.regions = regions
           )
         )
         .subscribe();
@@ -94,7 +97,7 @@ export class ClientFormComponent implements OnInit, OnDestroy {
 
   }
 
-  onCompareRegion(currentRegion: Region, clientRegion: Region): boolean {
+  onCompareRegion(currentRegion: RegionDto, clientRegion: RegionDto): boolean {
 
     if (!currentRegion && !clientRegion) {
       return true;
@@ -110,7 +113,7 @@ export class ClientFormComponent implements OnInit, OnDestroy {
     let lastName: string | null = null;
     let email: string | null = null;
     let createdAt: string | null = null;
-    let region: Region | null = null;
+    let region: RegionDto | null = null;
 
     if (this.editMode) {
       firstName = this.client.firstName;

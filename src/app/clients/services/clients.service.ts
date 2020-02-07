@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Client } from '../../shared/models/client.js';
+import { RawClientDto } from '../../shared/models/client.js';
 import { Subject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { ClientsDataService } from './clients-data.service';
@@ -9,9 +9,9 @@ import { ClientsDataService } from './clients-data.service';
 })
 export class ClientsService {
 
-  private clients: Client[] = [];
+  private clients: RawClientDto[] = [];
 
-  private selectedClient: Client;
+  private selectedClient: RawClientDto;
 
   public clientsUpdated: Subject<void> = new Subject<void>();
 
@@ -19,13 +19,13 @@ export class ClientsService {
     private clientsDataService: ClientsDataService
   ) { }
 
-  getClients(): Client[] {
+  getClients(): RawClientDto[] {
     return this.clients.slice();
   }
 
-  getClient(id: number): Client {
+  getClient(id: number): RawClientDto {
 
-    const foundClient = this.clients.find((client: Client) => {
+    const foundClient = this.clients.find((client: RawClientDto) => {
       return client.id === id;
     });
 
@@ -35,18 +35,18 @@ export class ClientsService {
 
   }
 
-  getSelectedClient(): Client {
+  getSelectedClient(): RawClientDto {
     return this.selectedClient;
   }
 
-  fetchClients(): Observable<Client[]> {
+  fetchClients(): Observable<RawClientDto[]> {
 
     return this
             .clientsDataService
             .getClients()
             .pipe(
               tap(
-                (clients: Client[]) => {
+                (clients: RawClientDto[]) => {
                   this.clients = clients;
                 }
               )
@@ -54,14 +54,14 @@ export class ClientsService {
 
   }
 
-  fetchClient(id: number): Observable<Client> {
+  fetchClient(id: number): Observable<RawClientDto> {
 
     return this
             .clientsDataService
             .getClient(id)
             .pipe(
               tap(
-                (client: Client) => {
+                (client: RawClientDto) => {
                   this.selectedClient = client;
                 }
               )
@@ -69,14 +69,14 @@ export class ClientsService {
 
   }
 
-  createClient(newClient: Client): Observable<Client> {
+  createClient(newClient: RawClientDto): Observable<RawClientDto> {
 
     return this
             .clientsDataService
             .createClient(newClient)
             .pipe(
               tap(
-                (client: Client) => {
+                (client: RawClientDto) => {
                   this.clients.push(client);
                   this.clientsUpdated.next();
                 }
@@ -85,14 +85,14 @@ export class ClientsService {
 
   }
 
-  updateClient(updatedClient: Client): Observable<Client> {
+  updateClient(updatedClient: RawClientDto): Observable<RawClientDto> {
 
     return this
             .clientsDataService
             .updateClient(updatedClient)
             .pipe(
               tap(
-                (newClient: Client) => {
+                (newClient: RawClientDto) => {
 
                   const clientIndex = this.clients.findIndex(client => client.id === updatedClient.id);
                   this.clients[clientIndex] = newClient;

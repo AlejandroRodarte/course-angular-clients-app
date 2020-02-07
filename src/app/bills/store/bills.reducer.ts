@@ -1,8 +1,8 @@
-import { Bill } from 'src/app/shared/models/bill';
+import { BillDto } from 'src/app/shared/models/bill';
 import * as BillActions from './bills.actions';
 
 export interface BillsReducerState {
-  selectedBill: Bill;
+  selectedBill: BillDto;
 }
 
 const initialState: BillsReducerState = {

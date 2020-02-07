@@ -2,19 +2,17 @@ import { Injectable } from '@angular/core';
 import * as fromApp from '../../store/app.reducer';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { HttpClient, HttpErrorResponse, HttpRequest, HttpEvent, HttpEventType } from '@angular/common/http';
-
 import * as ClientActions from './clients.actions';
 import selectors, { PageRedirectionParams } from '../../store/selectors';
 import { of } from 'rxjs';
 import { switchMap, map, tap, catchError, withLatestFrom } from 'rxjs/operators';
 import { environment } from './../../../environments/environment';
-import { Client } from 'src/app/shared/models/client';
-
 import swal from 'sweetalert2';
 import { Router } from '@angular/router';
-import { CreateClientResponseSuccess, DeleteClientResponseSuccess, Page } from './../../shared/payloads/responses';
 import { Store } from '@ngrx/store';
 import { Location } from '@angular/common';
+import { RawClientDto, ClientDto } from 'src/app/shared/models/client';
+import { CreateResponseSuccess, DeleteResponseSuccess, Page } from './../../shared/payloads/responses';
 
 @Injectable()
 export class ClientEffects {
@@ -41,12 +39,12 @@ export class ClientEffects {
 
             return this
                     .http
-                    .get<Page<Client>>(`${environment.baseUrl}/api/clients/page/${action.payload}`)
+                    .get<Page<RawClientDto>>(`${environment.baseUrl}/api/clients/page/${action.payload}`)
                     .pipe(
 
                       map(
 
-                        (page: Page<Client>) => {
+                        (page: Page<RawClientDto>) => {
 
                           page.content.map(client => {
                             client.firstName = client.firstName.toUpperCase();
@@ -96,24 +94,30 @@ export class ClientEffects {
 
             return this
                     .http
-                    .get<Client>(`${environment.baseUrl}/api/clients/${action.payload}`)
+                    .get<ClientDto>(`${environment.baseUrl}/api/clients/${action.payload}`)
                     .pipe(
 
                       map(
-                        (client: Client) => new ClientActions.GetClientSuccess(client)
+                        (client: ClientDto) => new ClientActions.GetClientSuccess(client)
                       ),
 
                       catchError(
+
                         (errorResponse: HttpErrorResponse) => {
 
                           if (errorResponse.status === 401) {
+
                             this.router.navigate(['/auth']);
+
                             return of({
                               type: '[Auth] Auth Redirection'
                             });
+
                           } else if (errorResponse.status === 403) {
+
                             this.router.navigate(['/clients/page', 0]);
                             swal.fire('Forbidden', 'You are not allowed to access this resource');
+
                           }
 
                           this.router.navigate(['/clients/page', 0]);
@@ -124,6 +128,7 @@ export class ClientEffects {
                           }));
 
                         }
+
                       )
 
                     );
@@ -150,15 +155,18 @@ export class ClientEffects {
 
             return this
                     .http
-                    .post<CreateClientResponseSuccess>(`${environment.baseUrl}/api/clients`, action.payload)
+                    .post<CreateResponseSuccess<RawClientDto>>(`${environment.baseUrl}/api/clients`, action.payload)
                     .pipe(
 
                       map(
 
-                        (response: CreateClientResponseSuccess) => {
+                        (response: CreateResponseSuccess<RawClientDto>) => {
+
                           response.client.createdAt = response.client.createdAt.substring(0, 10);
                           swal.fire(response.message, `The client ${response.client.firstName} has been successfully saved.`, 'success');
+
                           return new ClientActions.AddClientSuccess(response.client);
+
                         }
 
                       ),
@@ -169,31 +177,36 @@ export class ClientEffects {
                       ),
 
                       catchError(
+
                         (errorResponse: HttpErrorResponse) => {
 
                           if (errorResponse.status === 400) {
                             return of(new ClientActions.SetFormErrorMessages(errorResponse.error.errors));
                           } else if (errorResponse.status === 401) {
+
                             this.router.navigate(['/auth']);
+
                             return of({
                               type: '[Auth] Auth Redirection'
                             });
+
                           } else if (errorResponse.status === 403) {
+
                             this.location.back();
                             swal.fire('Forbidden', 'You are not allowed to perform this operation');
+
                             return of({
                               type: '[Auth] Auth Redirection'
                             });
-                          } else {
-
-                            this.location.back();
-
-                            return of(new ClientActions.ClientRequestFail({
-                              primaryErrorMessage: 'Error creating the client',
-                              secondaryErrorMessage: errorResponse.error.message
-                            }));
 
                           }
+
+                          this.location.back();
+
+                          return of(new ClientActions.ClientRequestFail({
+                            primaryErrorMessage: 'Error creating the client',
+                            secondaryErrorMessage: errorResponse.error.message
+                          }));
 
                         }
 
@@ -234,23 +247,23 @@ export class ClientEffects {
 
             return this
                     .http
-                    .request<CreateClientResponseSuccess>(customPostRequest)
+                    .request<CreateResponseSuccess<RawClientDto>>(customPostRequest)
                     .pipe(
 
                       map(
 
-                        (event: HttpEvent<CreateClientResponseSuccess>) => {
+                        (event: HttpEvent<CreateResponseSuccess<RawClientDto>>) => {
 
                           if (event.type === HttpEventType.UploadProgress) {
                             return new ClientActions.SetUploadProgress(Math.round((event.loaded / event.total) * 100));
                           } else if (event.type === HttpEventType.Response) {
                             swal.fire(`The client ${event.body.client.firstName} has updated its image.`, event.body.message, 'success');
                             return new ClientActions.UploadImageSuccess(event.body.client);
-                          } else {
-                            return {
-                              type: '[Clients] Filler Upload Image Action'
-                            };
                           }
+
+                          return {
+                            type: '[Clients] Filler Upload Image Action'
+                          };
 
                         }
 
@@ -261,15 +274,21 @@ export class ClientEffects {
                         (errorResponse: HttpErrorResponse) => {
 
                           if (errorResponse.status === 401) {
+
                             this.router.navigate(['/auth']);
+
                             return of({
                               type: '[Auth] Auth Redirection'
                             });
+
                           } else if (errorResponse.status === 403) {
+
                             swal.fire('Forbidden', 'You are not allowed to perform this operation');
+
                             return of({
                               type: '[Auth] Auth Redirection'
                             });
+
                           }
 
                           this.location.back();
@@ -306,12 +325,12 @@ export class ClientEffects {
 
             return this
                     .http
-                    .put<CreateClientResponseSuccess>(`${environment.baseUrl}/api/clients/${action.payload.id}`, action.payload)
+                    .put<CreateResponseSuccess<RawClientDto>>(`${environment.baseUrl}/api/clients/${action.payload.id}`, action.payload)
                     .pipe(
 
                       map(
 
-                        (response: CreateClientResponseSuccess) => {
+                        (response: CreateResponseSuccess<RawClientDto>) => {
                           swal.fire(response.message, `The client ${response.client.firstName} has been successfully updated.`, 'success');
                           return new ClientActions.UpdateClientSuccess(response.client);
                         }
@@ -323,30 +342,35 @@ export class ClientEffects {
                       ),
 
                       catchError(
+
                         (errorResponse: HttpErrorResponse) => {
 
                           if (errorResponse.status === 400) {
                             return of(new ClientActions.SetFormErrorMessages(errorResponse.error.errors));
                           } else if (errorResponse.status === 401) {
+
                             this.router.navigate(['/auth']);
+
                             return of({
                               type: '[Auth] Auth Redirection'
                             });
+
                           } else if (errorResponse.status === 403) {
+
                             swal.fire('Forbidden', 'You are not allowed to perform this operation');
+
                             return of({
                               type: '[Auth] Auth Redirection'
                             });
-                          } else {
-
-                            this.location.back();
-
-                            return of(new ClientActions.ClientRequestFail({
-                              primaryErrorMessage: 'Error updating the client',
-                              secondaryErrorMessage: errorResponse.error.message
-                            }));
 
                           }
+
+                          this.location.back();
+
+                          return of(new ClientActions.ClientRequestFail({
+                            primaryErrorMessage: 'Error updating the client',
+                            secondaryErrorMessage: errorResponse.error.message
+                          }));
 
                         }
                       )
@@ -375,11 +399,11 @@ export class ClientEffects {
 
           return this
                   .http
-                  .delete<DeleteClientResponseSuccess>(`${environment.baseUrl}/api/clients/${action.payload}`)
+                  .delete<DeleteResponseSuccess>(`${environment.baseUrl}/api/clients/${action.payload}`)
                   .pipe(
 
                     tap(
-                      (response: DeleteClientResponseSuccess) => swal.fire('Client Deleted', response.message, 'success')
+                      (response: DeleteResponseSuccess) => swal.fire('Client Deleted', response.message, 'success')
                     ),
 
                     map(
@@ -392,18 +416,25 @@ export class ClientEffects {
                     ),
 
                     catchError(
+
                       (errorResponse: HttpErrorResponse) => {
 
                         if (errorResponse.status === 401) {
+
                           this.router.navigate(['/auth']);
+
                           return of({
                             type: '[Auth] Auth Redirection'
                           });
+
                         } else if (errorResponse.status === 403) {
+
                           swal.fire('Forbidden', 'You are not allowed to perform this operation');
+
                           return of({
                             type: '[Auth] Auth Redirection'
                           });
+
                         }
 
                         return of(new ClientActions.ClientRequestFail({

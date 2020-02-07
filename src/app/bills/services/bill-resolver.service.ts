@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
-import { Client } from 'src/app/shared/models/client';
 import { Observable, of } from 'rxjs';
 import * as fromApp from '../../store/app.reducer';
 import * as BillActions from '../store/bills.actions';
@@ -8,12 +7,12 @@ import { Actions, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { take, switchMap, map, tap } from 'rxjs/operators';
 import selectors from 'src/app/store/selectors';
-import { Bill } from 'src/app/shared/models/bill';
+import { BillDto } from 'src/app/shared/models/bill';
 
 @Injectable({
   providedIn: 'root'
 })
-export class BillResolverService implements Resolve<Bill> {
+export class BillResolverService implements Resolve<BillDto> {
 
   constructor(
     private store: Store<fromApp.AppState>,
@@ -21,7 +20,7 @@ export class BillResolverService implements Resolve<Bill> {
     private router: Router
   ) { }
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Bill | Observable<Bill> | Promise<Bill> {
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): BillDto | Observable<BillDto> | Promise<BillDto> {
 
     return this
             .store
@@ -32,7 +31,7 @@ export class BillResolverService implements Resolve<Bill> {
 
               switchMap(
 
-                (selectedBill: Bill) => {
+                (selectedBill: BillDto) => {
 
                   if (!selectedBill) {
 
@@ -52,7 +51,7 @@ export class BillResolverService implements Resolve<Bill> {
 
                               tap(
 
-                                (bill: Bill) => {
+                                (bill: BillDto) => {
 
                                   if (!bill) {
                                     this.router.navigate(['/clients/page', 0]);

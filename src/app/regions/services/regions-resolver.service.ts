@@ -6,20 +6,20 @@ import * as RegionActions from '../store/regions.actions';
 import { Store } from '@ngrx/store';
 import { Actions, ofType } from '@ngrx/effects';
 import { take, switchMap, map } from 'rxjs/operators';
-import { Region } from 'src/app/shared/models/region';
+import { RegionDto } from 'src/app/shared/models/region';
 import selectors from 'src/app/store/selectors';
 
 @Injectable({
   providedIn: 'root'
 })
-export class RegionsResolverService implements Resolve<Region[]> {
+export class RegionsResolverService implements Resolve<RegionDto[]> {
 
   constructor(
     private store: Store<fromApp.AppState>,
     private actions$: Actions
   ) { }
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Region[] | Observable<Region[]> | Promise<Region[]> {
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): RegionDto[] | Observable<RegionDto[]> | Promise<RegionDto[]> {
 
     return this
             .store
@@ -30,7 +30,7 @@ export class RegionsResolverService implements Resolve<Region[]> {
 
               switchMap(
 
-                (regions: Region[]) => {
+                (regions: RegionDto[]) => {
 
                   if (regions.length === 0) {
                     this.store.dispatch(new RegionActions.GetRegionsStart());

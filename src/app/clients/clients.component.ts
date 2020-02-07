@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Client } from '../shared/models/client';
+import { ClientDto, RawClientDto } from '../shared/models/client';
 import { Subscription } from 'rxjs';
 import * as fromApp from '../store/app.reducer';
 import * as ClientActions from './store/clients.actions';
@@ -16,9 +16,9 @@ import selectors from '../store/selectors';
 })
 export class ClientsComponent implements OnInit, OnDestroy {
 
-  public clients: Client[];
+  public clients: RawClientDto[];
 
-  public selectedClient: Client;
+  public selectedClient: ClientDto;
 
   public roles: string[];
 
@@ -39,7 +39,7 @@ export class ClientsComponent implements OnInit, OnDestroy {
         .select(state => state.clients.clients)
         .pipe(
           tap(
-            (clients: Client[]) => this.clients = clients
+            (clients: RawClientDto[]) => this.clients = clients
           )
         )
         .subscribe();
@@ -50,7 +50,7 @@ export class ClientsComponent implements OnInit, OnDestroy {
         .select(selectors.getSelectedClient)
         .pipe(
           tap(
-            (selectedClient: Client) => this.selectedClient = selectedClient
+            (selectedClient: ClientDto) => this.selectedClient = selectedClient
           )
         )
         .subscribe();
@@ -95,7 +95,7 @@ export class ClientsComponent implements OnInit, OnDestroy {
 
   }
 
-  async onDelete(client: Client) {
+  async onDelete(client: RawClientDto) {
 
     const result =
       await swal.fire({
