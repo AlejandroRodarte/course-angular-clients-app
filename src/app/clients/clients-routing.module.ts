@@ -43,7 +43,8 @@ const clientRoutes: Routes = [
       RoleGuardService
     ],
     data: {
-      role: 'ROLE_ADMIN'
+      role: 'ROLE_ADMIN',
+      eager: false
     }
   }
 ];

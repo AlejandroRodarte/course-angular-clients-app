@@ -42,7 +42,8 @@ export function clientsReducer(state = initialState, action: ClientActions.Clien
       return {
         ...state,
         clients: action.payload.clients,
-        paginationParams: action.payload.paginationParams
+        paginationParams: action.payload.paginationParams,
+        selectedClient: null
       };
 
     case ClientActions.GET_CLIENT_SUCCESS:

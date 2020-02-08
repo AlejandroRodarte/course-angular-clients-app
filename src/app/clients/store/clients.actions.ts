@@ -81,7 +81,10 @@ export class GetClientStart implements Action {
   readonly type = GET_CLIENT_START;
 
   constructor(
-    public payload: number
+    public payload: {
+      id: number,
+      eager: boolean
+    }
   ) { }
 
 }

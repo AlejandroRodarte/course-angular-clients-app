@@ -35,7 +35,10 @@ export class ClientResolverService implements Resolve<ClientDto> {
 
                   if (!selectedClient) {
 
-                    this.store.dispatch(new ClientActions.GetClientStart(+route.params.id));
+                    this.store.dispatch(new ClientActions.GetClientStart({
+                      id: +route.params.id,
+                      eager: route.data.eager
+                    }));
 
                     return this
                             .actions$

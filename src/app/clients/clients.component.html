@@ -63,6 +63,10 @@
             date
           </th>
 
+          <th>
+            create bill
+          </th>
+
           <th *ngIf="hasRole('ROLE_ADMIN')">
             edit
           </th>
@@ -115,6 +119,16 @@
 
           <td>
             {{ client.createdAt | date:"EEEE dd, MMMM yyyy" }}
+          </td>
+
+          <td>
+            <button
+              type="button"
+              class="btn btn-success btn-sm"
+              [routerLink]="['/bills/form', client.id]"
+            >
+              Create bill
+            </button>
           </td>
 
           <td *ngIf="hasRole('ROLE_ADMIN')">

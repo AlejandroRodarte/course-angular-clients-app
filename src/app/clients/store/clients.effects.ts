@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as fromApp from '../../store/app.reducer';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { HttpClient, HttpErrorResponse, HttpRequest, HttpEvent, HttpEventType } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpRequest, HttpEvent, HttpEventType, HttpParams } from '@angular/common/http';
 import * as ClientActions from './clients.actions';
 import selectors, { PageRedirectionParams } from '../../store/selectors';
 import { of } from 'rxjs';
@@ -94,7 +94,9 @@ export class ClientEffects {
 
             return this
                     .http
-                    .get<ClientDto>(`${environment.baseUrl}/api/clients/${action.payload}`)
+                    .get<ClientDto>(`${environment.baseUrl}/api/clients/${action.payload.id}`, {
+                      params: new HttpParams().append('eager', action.payload.eager.toString())
+                    })
                     .pipe(
 
                       map(
