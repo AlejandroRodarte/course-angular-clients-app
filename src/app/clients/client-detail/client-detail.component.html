@@ -189,6 +189,10 @@
                       View more
                     </th>
 
+                    <th>
+                      Delete bill
+                    </th>
+
                   </tr>
 
                 </thead>
@@ -218,6 +222,16 @@
                       [routerLink]="['/bills', bill.id]"
                     >
                       Details
+                    </button>
+                  </td>
+
+                  <td>
+                    <button
+                      class="btn btn-danger btn-sm"
+                      type="button"
+                      (click)="onDeleteBill(bill)"
+                    >
+                      Delete
                     </button>
                   </td>
 

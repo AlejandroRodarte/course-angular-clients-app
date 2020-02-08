@@ -1,6 +1,7 @@
 import * as ClientActions from './clients.actions';
 import { PaginationParams } from 'src/app/shared/payloads/pagination';
 import { RawClientDto, ClientDto } from 'src/app/shared/models/client';
+import { RawBillDto } from './../../shared/models/bill';
 
 export interface ClientsReducerState {
   clients: RawClientDto[];
@@ -139,6 +140,15 @@ export function clientsReducer(state = initialState, action: ClientActions.Clien
         return {
           ...state,
           downloadProgress: action.payload
+        };
+
+      case ClientActions.DELETE_BILL_SUCCESS:
+        return {
+          ...state,
+          selectedClient: {
+            ...state.selectedClient,
+            bills: state.selectedClient.bills.filter((bill: RawBillDto) => bill.id !== action.payload)
+          }
         };
 
     default:

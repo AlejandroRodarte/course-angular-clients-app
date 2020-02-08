@@ -30,6 +30,7 @@ export const UPLOAD_IMAGE_START = '[Clients] Upload Image Start';
 export const UPLOAD_IMAGE_SUCCESS = '[Clients] Upload Image Success';
 
 export const SET_UPLOAD_PROGRESS = '[Clients] Set Upload Progress';
+export const DELETE_BILL_SUCCESS = '[Clients] Delete Bill Success';
 
 export type ClientActions =
 GetClientsStart |
@@ -49,7 +50,8 @@ SetFormErrorMessages |
 ClearFormErrorMessages |
 UploadImageStart |
 UploadImageSuccess |
-SetUploadProgress;
+SetUploadProgress |
+DeleteBillSuccess;
 
 export class GetClientsStart implements Action {
 
@@ -215,6 +217,16 @@ export class UploadImageSuccess implements Action {
 export class SetUploadProgress implements Action {
 
   readonly type = SET_UPLOAD_PROGRESS;
+
+  constructor(
+    public payload: number
+  ) { }
+
+}
+
+export class DeleteBillSuccess implements Action {
+
+  readonly type = DELETE_BILL_SUCCESS;
 
   constructor(
     public payload: number

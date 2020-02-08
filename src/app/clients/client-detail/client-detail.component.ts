@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import * as fromApp from '../../store/app.reducer';
 import * as ClientActions from '../store/clients.actions';
+import * as BillActions from '../../bills/store/bills.actions';
 import { Store } from '@ngrx/store';
 import { Subscription } from 'rxjs';
 import selectors from 'src/app/store/selectors';
@@ -8,6 +9,7 @@ import { tap } from 'rxjs/operators';
 import { ClientDto } from 'src/app/shared/models/client';
 
 import swal from 'sweetalert2';
+import { RawBillDto } from 'src/app/shared/models/bill';
 
 @Component({
   selector: 'app-client-detail',
@@ -109,6 +111,18 @@ export class ClientDetailComponent implements OnInit, OnDestroy {
     }
 
     return this.roles.includes(role);
+
+  }
+
+  onDeleteBill(bill: RawBillDto): void {
+
+    swal
+      .fire('Deleting Bill', `Are you sure you want to delete this bill ${bill.description}?`, 'warning')
+      .then(result => {
+        if (result.value) {
+          this.store.dispatch(new BillActions.DeleteBillStart(bill.id));
+        }
+      });
 
   }
 
