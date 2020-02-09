@@ -125,7 +125,7 @@ export class BillsEffects {
                       tap(
                         (newAction: BillActions.AddBillSuccess) => {
                           swal.fire('Success', `Bill ${newAction.payload.description} created`, 'success');
-                          this.router.navigate(['/clients']);
+                          this.router.navigate(['/bills', newAction.payload.id]);
                         }
                       )
                     );
