@@ -3,7 +3,7 @@ import * as fromApp from '../../store/app.reducer';
 import * as BillActions from '../store/bills.actions';
 import { Store } from '@ngrx/store';
 import { Subscription, Observable } from 'rxjs';
-import { FormGroup, FormControl, FormArray, Form, AbstractControl } from '@angular/forms';
+import { FormGroup, FormControl, FormArray, Form, AbstractControl, Validators } from '@angular/forms';
 import { RawClientDto } from './../../shared/models/client';
 import { ClientDto } from 'src/app/shared/models/client';
 import selectors from 'src/app/store/selectors';
@@ -117,6 +117,26 @@ export class BillFormComponent implements OnInit, OnDestroy {
 
   getControls(path: (string | number)[] | string): AbstractControl[] {
     return this.getFormArray(path).controls;
+  }
+
+  onDeleteBillItem(i: number): void {
+    this.getFormArray('billItems').removeAt(i);
+  }
+
+  get total(): number {
+
+    let total = 0;
+
+    this
+      .getControls('billItems')
+      .map(control => ({
+        quantity: control.get('quantity').value as number,
+        price: control.get('product').value.price as number
+      }))
+      .forEach(({ quantity, price }) => total += quantity * price);
+
+    return total;
+
   }
 
   ngOnDestroy() {
