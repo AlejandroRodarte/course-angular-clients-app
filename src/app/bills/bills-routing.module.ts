@@ -4,6 +4,7 @@ import { BillDetailComponent } from './bill-detail/bill-detail.component';
 import { BillResolverService } from './services/bill-resolver.service';
 import { BillFormComponent } from './bill-form/bill-form.component';
 import { ClientResolverService } from '../clients/services/client-resolver.service';
+import { RoleGuardService } from '../auth/services/role.guard';
 
 const billsRoutes: Routes = [
   {
@@ -15,7 +16,13 @@ const billsRoutes: Routes = [
     component: BillDetailComponent,
     resolve: [
       BillResolverService
-    ]
+    ],
+    canActivate: [
+      RoleGuardService
+    ],
+    data: {
+      role: 'ROLE_USER'
+    }
   },
   {
     path: 'form/:id',
@@ -23,8 +30,12 @@ const billsRoutes: Routes = [
     resolve: [
       ClientResolverService
     ],
+    canActivate: [
+      RoleGuardService
+    ],
     data: {
-      eager: false
+      eager: false,
+      role: 'ROLE_ADMIN'
     }
   }
 ];

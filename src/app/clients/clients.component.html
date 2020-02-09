@@ -63,7 +63,7 @@
             date
           </th>
 
-          <th>
+          <th *ngIf="hasRole('ROLE_ADMIN')">
             create bill
           </th>
 
@@ -121,7 +121,7 @@
             {{ client.createdAt | date:"EEEE dd, MMMM yyyy" }}
           </td>
 
-          <td>
+          <td *ngIf="hasRole('ROLE_ADMIN')">
             <button
               type="button"
               class="btn btn-success btn-sm"

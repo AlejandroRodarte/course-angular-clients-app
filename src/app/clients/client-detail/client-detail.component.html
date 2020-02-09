@@ -151,7 +151,7 @@
 
             </div>
 
-            <div class="row">
+            <div class="row" *ngIf="hasRole('ROLE_ADMIN')">
 
               <button
                 type="button"
@@ -201,7 +201,7 @@
                       View more
                     </th>
 
-                    <th>
+                    <th *ngIf="hasRole('ROLE_ADMIN')">
                       Delete bill
                     </th>
 
@@ -237,7 +237,7 @@
                     </button>
                   </td>
 
-                  <td>
+                  <td *ngIf="hasRole('ROLE_ADMIN')">
                     <button
                       class="btn btn-danger btn-sm"
                       type="button"
