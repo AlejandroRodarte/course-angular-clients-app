@@ -51,7 +51,7 @@ export class ClientFormComponent implements OnInit, OnDestroy {
           tap(
             ({ client, editMode }: { client: ClientDto, editMode: boolean }) => {
 
-              this.client = client;
+              this.client = !client ? this.client : client;
               this.editMode = editMode;
 
               this.loadForm();

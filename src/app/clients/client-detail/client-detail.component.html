@@ -167,14 +167,14 @@
 
               <div
                 class="alert alert-info my-4"
-                *ngIf="selectedClient.bills.length === 0"
+                *ngIf="selectedClient.bills && selectedClient.bills.length === 0"
               >
                 There are no bills to display for {{ selectedClient.firstName }}
               </div>
 
               <table
                 class="table table-bordered table-stripped my-4"
-                *ngIf="selectedClient.bills.length > 0"
+                *ngIf="selectedClient.bills && selectedClient.bills.length > 0"
               >
 
                 <thead>
