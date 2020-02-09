@@ -39,6 +39,10 @@ export class BillDetailComponent implements OnInit, OnDestroy {
 
   }
 
+  onLeave(): void {
+    this.store.dispatch(new BillActions.ClearBill());
+  }
+
   ngOnDestroy() {
     this.selectedBillSubscription.unsubscribe();
   }

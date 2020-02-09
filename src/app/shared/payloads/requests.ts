@@ -1,3 +1,6 @@
+import { RawClientDto } from '../models/client';
+import { ProductDto } from '../models/product';
+
 export interface LoginRequest {
   username: string;
   password: string;
@@ -17,4 +20,16 @@ export interface CreateClientRequest {
 
 export interface UpdateClientRequest extends CreateClientRequest {
   id: number;
+}
+
+export interface CreateBillRequest {
+  description: string;
+  comment: string;
+  client: RawClientDto;
+  billItems: CreateBillItemRequest[];
+}
+
+interface CreateBillItemRequest {
+  quantity: number;
+  product: ProductDto;
 }

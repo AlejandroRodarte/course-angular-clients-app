@@ -8,13 +8,15 @@ import { environment } from './../../../environments/environment';
 import { BillDto } from 'src/app/shared/models/bill';
 import swal from 'sweetalert2';
 import { ProductDto } from 'src/app/shared/models/product';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class BillsEffects {
 
   constructor(
     private actions$: Actions,
-    private http: HttpClient
+    private http: HttpClient,
+    private router: Router
   ) { }
 
   @Effect()
@@ -92,6 +94,39 @@ export class BillsEffects {
                     .pipe(
                       map(
                         (products: ProductDto[]) => new BillActions.GetProductsSuccess(products)
+                      )
+                    );
+
+          }
+
+        )
+
+      );
+
+  @Effect()
+  createBill =
+    this
+      .actions$
+      .pipe(
+
+        ofType(BillActions.ADD_BILL_START),
+
+        switchMap(
+
+          (action: BillActions.AddBillStart) => {
+
+            return this
+                    .http
+                    .post<BillDto>(`${environment.baseUrl}/api/bills`, action.payload)
+                    .pipe(
+                      map(
+                        (bill: BillDto) => new BillActions.AddBillSuccess(bill)
+                      ),
+                      tap(
+                        (newAction: BillActions.AddBillSuccess) => {
+                          swal.fire('Success', `Bill ${newAction.payload.description} created`, 'success');
+                          this.router.navigate(['/clients']);
+                        }
                       )
                     );
 

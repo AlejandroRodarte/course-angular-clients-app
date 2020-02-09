@@ -10,6 +10,7 @@ import selectors from 'src/app/store/selectors';
 import { tap, startWith, map, flatMap } from 'rxjs/operators';
 import { ProductDto } from 'src/app/shared/models/product';
 import { MatAutocompleteSelectedEvent } from '@angular/material';
+import { CreateBillRequest } from 'src/app/shared/payloads/requests';
 
 @Component({
   selector: 'app-bill-form',
@@ -79,6 +80,7 @@ export class BillFormComponent implements OnInit, OnDestroy {
     if (this.billForm.value.client.hasOwnProperty('bills')) {
       delete this.billForm.value.client.bills;
     }
+    this.store.dispatch(new BillActions.AddBillStart(this.billForm.value as CreateBillRequest));
   }
 
   displayName(product?: ProductDto): string | undefined {

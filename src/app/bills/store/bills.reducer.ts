@@ -34,6 +34,12 @@ export function billsReducer(state = initialState, action: BillActions.BillActio
         products: action.payload
       };
 
+    case BillActions.ADD_BILL_SUCCESS:
+      return {
+        ...state,
+        selectedBill: action.payload
+      };
+
     default:
       return state;
 

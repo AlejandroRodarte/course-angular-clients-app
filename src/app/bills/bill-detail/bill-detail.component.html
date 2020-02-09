@@ -1,4 +1,7 @@
-<div class="card bg-light">
+<div
+  class="card bg-light"
+  *ngIf="selectedBill"
+>
 
   <div class="card-header">
     {{ title }}: {{ selectedBill.description }}
@@ -10,6 +13,7 @@
       <a
         class="btn btn-light btn-xs"
         [routerLink]="['/clients']"
+        (click)="onLeave()"
       >
         Go back
       </a>
