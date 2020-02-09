@@ -53,12 +53,21 @@
         </label>
 
         <div class="col-sm-6">
+
           <input
             type="text"
             class="form-control"
             name="description"
             formControlName="description"
           >
+
+          <div
+            class="alert alert-danger"
+            *ngIf="billForm.get('description').touched && !billForm.get('description').valid"
+          >
+            The description is required
+          </div>
+
         </div>
 
       </div>
@@ -217,6 +226,7 @@
           <button
             type="submit"
             class="btn btn-secondary"
+            [disabled]="!billForm.valid || getControls('billItems').length === 0"
           >
             Create bill
           </button>

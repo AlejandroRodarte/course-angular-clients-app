@@ -68,7 +68,7 @@ export class BillFormComponent implements OnInit, OnDestroy {
   private loadForm(): void {
 
     this.billForm = new FormGroup({
-      description: new FormControl(null),
+      description: new FormControl(null, [Validators.required]),
       comment: new FormControl(null),
       client: new FormControl(this.selectedClient),
       billItems: new FormArray([])
