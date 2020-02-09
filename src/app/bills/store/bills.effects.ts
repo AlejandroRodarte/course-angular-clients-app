@@ -7,6 +7,7 @@ import { switchMap, map, tap } from 'rxjs/operators';
 import { environment } from './../../../environments/environment';
 import { BillDto } from 'src/app/shared/models/bill';
 import swal from 'sweetalert2';
+import { ProductDto } from 'src/app/shared/models/product';
 
 @Injectable()
 export class BillsEffects {
@@ -64,6 +65,33 @@ export class BillsEffects {
                       ),
                       tap(
                         () => swal.fire('Bill deleted', 'Bill deleted successfully!', 'success')
+                      )
+                    );
+
+          }
+
+        )
+
+      );
+
+  @Effect()
+  fetchProducts =
+    this
+      .actions$
+      .pipe(
+
+        ofType(BillActions.GET_PRODUCTS_START),
+
+        switchMap(
+
+          (action: BillActions.GetProductsStart) => {
+
+            return this
+                    .http
+                    .get<ProductDto[]>(`${environment.baseUrl}/api/bills/products/${action.payload}`)
+                    .pipe(
+                      map(
+                        (products: ProductDto[]) => new BillActions.GetProductsSuccess(products)
                       )
                     );
 

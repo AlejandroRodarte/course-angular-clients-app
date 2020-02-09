@@ -7,7 +7,8 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { RawClientDto } from './../../shared/models/client';
 import { ClientDto } from 'src/app/shared/models/client';
 import selectors from 'src/app/store/selectors';
-import { tap, startWith, map } from 'rxjs/operators';
+import { tap, startWith, map, flatMap } from 'rxjs/operators';
+import { ProductDto } from 'src/app/shared/models/product';
 
 @Component({
   selector: 'app-bill-form',
@@ -26,7 +27,7 @@ export class BillFormComponent implements OnInit, OnDestroy {
 
   public products: string[] = ['Chair', 'Tablet', 'Sony', 'TV'];
 
-  public filteredProducts: Observable<string[]>;
+  public filteredProducts: Observable<ProductDto[]>;
 
   private clientSubscription: Subscription;
 
@@ -55,8 +56,9 @@ export class BillFormComponent implements OnInit, OnDestroy {
         .autocompleteControl
         .valueChanges
         .pipe(
-          startWith(''),
-          map(value => this._filter(value))
+          map(value => typeof value === 'string' ? value : value.name),
+          tap((value: string) => value && this.store.dispatch(new BillActions.GetProductsStart(value))),
+          flatMap((value: string) => value ? this.getProducts() : [])
         );
 
   }
@@ -76,11 +78,13 @@ export class BillFormComponent implements OnInit, OnDestroy {
     console.log(this.billForm.value);
   }
 
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.products.filter(option => option.toLowerCase().includes(filterValue));
+  displayName(product?: ProductDto): string | undefined {
+    return product ? product.name : undefined;
   }
 
+  private getProducts(): Observable<ProductDto[]> {
+    return this.store.select(selectors.getProducts);
+  }
 
   ngOnDestroy() {
     this.clientSubscription.unsubscribe();

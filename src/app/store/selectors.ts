@@ -40,7 +40,9 @@ const selectors = {
   isAdmin: (state: fromApp.AppState) => state.auth.user ?
   state.auth.user.roles.map((role: Role) => role.name).includes('ROLE_ADMIN') : false,
 
-  getSelectedBill: (state: fromApp.AppState) => state.bills.selectedBill
+  getSelectedBill: (state: fromApp.AppState) => state.bills.selectedBill,
+
+  getProducts: (state: fromApp.AppState) => state.bills.products
 
 };
 
