@@ -71,7 +71,8 @@ export class AuthEffects {
                       catchError(
                         (errorResponse: HttpErrorResponse) => {
                           swal.fire('Login Failure', 'Bad credentials', 'error');
-                          this.cookieService.delete('userData', '/');
+                          // localStorage.removeItem('userData');
+                          this.cookieService.delete('userData', '/', window.location.host);
                           return of(new AuthActions.AuthenticateFail());
                         }
                       )
@@ -105,12 +106,14 @@ export class AuthEffects {
               user: action.payload.user
             };
 
+            // localStorage.setItem('userData', JSON.stringify(userData));
+
             this.cookieService.set(
               'userData',
               JSON.stringify(userData),
               new Date(userData.refreshTokenExpirationDate),
               '/',
-              'localhost',
+              window.location.host,
               false,
               'Strict'
             );
@@ -139,7 +142,8 @@ export class AuthEffects {
 
         tap(
           (action: AuthActions.Logout) => {
-            this.cookieService.delete('userData', '/');
+            // localStorage.removeItem('userData');
+            this.cookieService.delete('userData', '/', window.location.host);
             this.authService.clearTimer();
             this.router.navigate(['/auth']);
             swal.fire('Logout', 'You have closed your session', 'success');
@@ -160,6 +164,7 @@ export class AuthEffects {
 
           (action: AuthActions.Logout) => {
 
+            // const cookie = localStorage.getItem('userData');
             const cookie = this.cookieService.get('userData');
 
             if (!cookie) {
@@ -167,7 +172,8 @@ export class AuthEffects {
               return new AuthActions.AuthenticateFail();
             }
 
-            const userData: UserData = JSON.parse(this.cookieService.get('userData'));
+            // const userData: UserData = JSON.parse(localStorage.getItem('userData'));
+            const userData: UserData = JSON.parse(cookie);
 
             const accessTokenExpirationTime = userData.expirationDate - new Date().getTime();
             const accessTokenExpired = accessTokenExpirationTime < 0;
@@ -254,7 +260,8 @@ export class AuthEffects {
                       catchError(
                         (errorResponse: HttpErrorResponse) => {
                           swal.fire('Login Failure', 'Bad credentials', 'error');
-                          this.cookieService.delete('userData', '/');
+                          // localStorage.removeItem('userData');
+                          this.cookieService.delete('userData', '/', window.location.host);
                           return of(new AuthActions.AuthenticateFail());
                         }
                       )
