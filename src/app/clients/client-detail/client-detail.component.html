@@ -133,7 +133,7 @@
 
                 <img
                   *ngIf="selectedClient.image"
-                  [src]="'http://localhost:8080/api/clients/image/' + selectedClient.image"
+                  [src]="baseUrl + '/api/clients/image/' + selectedClient.image"
                   alt="No image for this user"
                   class="img-thumbnail rounded"
                   style="width: 350px;"
@@ -141,7 +141,7 @@
 
                 <img
                   *ngIf="!selectedClient.image"
-                  src="http://localhost:8080/images/no-user.png"
+                  [src]="baseUrl + '/images/no-user.png'"
                   alt="No image for this user"
                   class="img-thumbnail rounded"
                   style="width: 350px;"

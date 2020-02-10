@@ -10,6 +10,7 @@ import { ClientDto } from 'src/app/shared/models/client';
 
 import swal from 'sweetalert2';
 import { RawBillDto } from 'src/app/shared/models/bill';
+import { environment } from './../../../environments/environment';
 
 @Component({
   selector: 'app-client-detail',
@@ -17,6 +18,8 @@ import { RawBillDto } from 'src/app/shared/models/bill';
   styleUrls: ['./client-detail.component.css']
 })
 export class ClientDetailComponent implements OnInit, OnDestroy {
+
+  public baseUrl: string = environment.baseUrl;
 
   public title = 'Client Details';
 

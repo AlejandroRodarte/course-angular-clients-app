@@ -8,6 +8,7 @@ import { tap } from 'rxjs/operators';
 
 import swal from 'sweetalert2';
 import selectors from '../store/selectors';
+import { environment } from './../../environments/environment';
 
 @Component({
   selector: 'app-clients',
@@ -15,6 +16,8 @@ import selectors from '../store/selectors';
   styleUrls: ['./clients.component.css']
 })
 export class ClientsComponent implements OnInit, OnDestroy {
+
+  public baseUrl: string = environment.baseUrl;
 
   public clients: RawClientDto[];
 
