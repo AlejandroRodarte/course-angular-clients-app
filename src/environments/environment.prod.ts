@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  baseUrl: 'http://localhost:8080',
+  baseUrl: 'https://spring-clients-app.herokuapp.com',
   clientId: 'angular-app',
   clientSecret: 'my-client-secret'
 };
